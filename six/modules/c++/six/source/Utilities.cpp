@@ -486,7 +486,7 @@ PolarizationSequenceType six::toType<PolarizationSequenceType>(
     const std::string& s)
 {
     //return toType_<PolarizationSequenceType>(s, "Unsupported polarization type");
-    const auto retval = six::SixEnum::toType<PolarizationSequenceType>(s);
+    const auto retval = nitf::from_string<PolarizationSequenceType>(s);
     if (retval != PolarizationSequenceType::NOT_SET) // existing code only handled OTHER/UNKNOWN, not NOT_SET
     {
         return retval;
@@ -498,7 +498,7 @@ template <>
 std::string six::toString(const PolarizationSequenceType& t)
 {
     //return toString_(t, "Unsupported polarization type to string");
-    return six::SixEnum::toString(t);
+    return nitf::to_string(t);
 }
 
 template <>

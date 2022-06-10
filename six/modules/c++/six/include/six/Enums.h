@@ -314,68 +314,24 @@ enum class PolarizationSequenceType
     SEQUENCE = 7,
     NOT_SET = six::NOT_SET_VALUE
 };
-namespace SixEnum
+inline const std::map<std::string, six::PolarizationSequenceType>& string_to_enum()
 {
-    template<typename T> const std::map<std::string, T>& string_to_T();
-
-    template<>
-    inline const std::map<std::string, PolarizationSequenceType>& string_to_T()
+    static const std::map<std::string, PolarizationSequenceType> retval
     {
-        static const std::map<std::string, PolarizationSequenceType> retval
-        {
-            { "OTHER", PolarizationSequenceType::OTHER},
-            { "V", PolarizationSequenceType::V},
-            { "H", PolarizationSequenceType::H},
-            { "X", PolarizationSequenceType::X},
-            { "Y", PolarizationSequenceType::Y},
-            { "S", PolarizationSequenceType::S},
-            { "E", PolarizationSequenceType::E},
-            { "RHC", PolarizationSequenceType::RHC},
-            { "LHC", PolarizationSequenceType::LHC},
-            { "UNKNOWN", PolarizationSequenceType::UNKNOWN},
-            { "SEQUENCE", PolarizationSequenceType::SEQUENCE},
-            { "NOT SET", PolarizationSequenceType::NOT_SET},
-        };
-        return retval;
-    }
-
-    template<typename T>
-    inline std::map<std::string, int> string_to_int(const std::map<std::string, T>& map)
-    {
-        std::map<std::string, int> retval;
-        for (auto& kv : map)
-        {
-            retval[kv.first] = static_cast<int>(kv.second);
-        }
-        return retval;
-    }
-
-    template<typename T>
-    inline std::optional<T> toType(const std::string& s, const except::Exception* pEx)
-    {
-        static const auto map = string_to_int(string_to_T<T>());
-        return six::details::Enum<T>::toType(map, s, pEx);
-    }
-    template<typename T>
-    inline std::optional<T> toType(const std::string& s, std::nothrow_t)
-    {
-        return toType<T>(s, nullptr /*pEx*/);
-    }
-    template<typename T>
-    inline T toType(const std::string& v)
-    {
-        const except::Exception ex(Ctxt("Unknown type '" + v + "'"));
-        const auto result = toType<T>(v, &ex);
-        assert(result.has_value()); // nitf::details::index() should have already thrown, if necessary
-        return *result;
-    }
-
-    template<typename T>
-    inline std::string toString(T v, bool throw_if_not_set = false)
-    {
-        static const auto map = nitf::details::swap_key_value(string_to_int(string_to_T<T>()));
-        return six::details::EnumBase::default_toString(map, static_cast<int>(v), throw_if_not_set);
-    }
+        { "OTHER", PolarizationSequenceType::OTHER},
+        { "V", PolarizationSequenceType::V},
+        { "H", PolarizationSequenceType::H},
+        { "X", PolarizationSequenceType::X},
+        { "Y", PolarizationSequenceType::Y},
+        { "S", PolarizationSequenceType::S},
+        { "E", PolarizationSequenceType::E},
+        { "RHC", PolarizationSequenceType::RHC},
+        { "LHC", PolarizationSequenceType::LHC},
+        { "UNKNOWN", PolarizationSequenceType::UNKNOWN},
+        { "SEQUENCE", PolarizationSequenceType::SEQUENCE},
+        { "NOT SET", PolarizationSequenceType::NOT_SET},
+    };
+    return retval;
 }
 
 /*!

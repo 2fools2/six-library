@@ -124,23 +124,23 @@ bool six::PolarizationType::less_(const EnumBase& rhs) const
     return less_imp(*this, rhs);
 }
 
-std::optional<six::PolarizationSequenceType> six::PolarizationSequenceType::toType_(const std::string& v, const except::Exception* pEx) const
-{
-    // Need something more than C++11 to avoid mentioning the type twice; in C++14, the lambda could be "auto"
-    return toType_imp<PolarizationSequenceType>(v, pEx, [&](PolarizationSequenceType& t) { t.other_ = v; });
-}
-std::string six::PolarizationSequenceType::toString_(bool throw_if_not_set) const
-{
-    return toString_imp(other_, [&]() { return default_toString(throw_if_not_set); });
-}
-bool six::PolarizationSequenceType::equals_(const std::string& rhs) const
-{
-    return eq_imp(*this, rhs, [&]() { return this->default_equals(rhs); });
-}
-bool six::PolarizationSequenceType::less_(const EnumBase& rhs) const
-{
-    return less_imp(*this, rhs);
-}
+//std::optional<six::PolarizationSequenceType> six::PolarizationSequenceType::toType_(const std::string& v, const except::Exception* pEx) const
+//{
+//    // Need something more than C++11 to avoid mentioning the type twice; in C++14, the lambda could be "auto"
+//    return toType_imp<PolarizationSequenceType>(v, pEx, [&](PolarizationSequenceType& t) { t.other_ = v; });
+//}
+//std::string six::PolarizationSequenceType::toString_(bool throw_if_not_set) const
+//{
+//    return toString_imp(other_, [&]() { return default_toString(throw_if_not_set); });
+//}
+//bool six::PolarizationSequenceType::equals_(const std::string& rhs) const
+//{
+//    return eq_imp(*this, rhs, [&]() { return this->default_equals(rhs); });
+//}
+//bool six::PolarizationSequenceType::less_(const EnumBase& rhs) const
+//{
+//    return less_imp(*this, rhs);
+//}
 
 std::optional<six::DualPolarizationType> six::DualPolarizationType::toType_(const std::string& v, const except::Exception* pEx) const
 {
