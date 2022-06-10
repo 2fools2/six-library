@@ -262,45 +262,122 @@ SIX_Enum_END_DEFINE(PixelType);
  *
  *  Enumeration used to represent PolarizationSequenceTypes
  */
-SIX_Enum_BEGIN_DEFINE(PolarizationSequenceType)
-private:
-    std::string other_; // valid of OTHER.* for SIDD 3.0/SICD 1.3
-    std::string toString_(bool throw_if_not_set) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool equals_(const std::string& rhs) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool less_(const EnumBase& rhs) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
-public:
-    std::optional<PolarizationSequenceType> toType_(const std::string&, const except::Exception*) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
+//SIX_Enum_BEGIN_DEFINE(PolarizationSequenceType)
+//private:
+//    std::string other_; // valid of OTHER.* for SIDD 3.0/SICD 1.3
+//    std::string toString_(bool throw_if_not_set) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
+//    bool equals_(const std::string& rhs) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
+//    bool less_(const EnumBase& rhs) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
+//public:
+//    std::optional<PolarizationSequenceType> toType_(const std::string&, const except::Exception*) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
+//
+//    //! The enumerations allowed
+//    SIX_Enum_BEGIN_enum
+//        OTHER = 1,
+//        V = 2,
+//        H = 3,
+//        X = 8, // SIDD 3.0, SICD 1.3
+//        Y, // SIDD 3.0, SICD 1.3
+//        S, // SIDD 3.0, SICD 1.3
+//        E, // SIDD 3.0, SICD 1.3
+//        RHC = 4,
+//        LHC = 5,
+//        UNKNOWN = 6,
+//        SEQUENCE = 7,
+//    SIX_Enum_END_enum
+//
+//    SIX_Enum_BEGIN_string_to_int
+//            SIX_Enum_map_entry_(OTHER),
+//            SIX_Enum_map_entry_(V),
+//            SIX_Enum_map_entry_(H),
+//            SIX_Enum_map_entry_(X),
+//            SIX_Enum_map_entry_(Y),
+//            SIX_Enum_map_entry_(S),
+//            SIX_Enum_map_entry_(E),
+//            SIX_Enum_map_entry_(RHC),
+//            SIX_Enum_map_entry_(LHC),
+//            SIX_Enum_map_entry_(UNKNOWN),
+//            SIX_Enum_map_entry_(SEQUENCE),
+//    SIX_Enum_END_string_to_int
+//SIX_Enum_END_DEFINE(PolarizationSequenceType);
+enum class PolarizationSequenceType
+{
+    OTHER = 1,
+    V = 2,
+    H = 3,
+    X = 8, // SIDD 3.0, SICD 1.3
+    Y, // SIDD 3.0, SICD 1.3
+    S, // SIDD 3.0, SICD 1.3
+    E, // SIDD 3.0, SICD 1.3
+    RHC = 4,
+    LHC = 5,
+    UNKNOWN = 6,
+    SEQUENCE = 7,
+    NOT_SET = six::NOT_SET_VALUE
+};
+namespace SixEnum
+{
+    template<typename T> const std::map<std::string, T>& string_to_T();
 
-    //! The enumerations allowed
-    SIX_Enum_BEGIN_enum
-        OTHER = 1,
-        V = 2,
-        H = 3,
-        X = 8, // SIDD 3.0, SICD 1.3
-        Y, // SIDD 3.0, SICD 1.3
-        S, // SIDD 3.0, SICD 1.3
-        E, // SIDD 3.0, SICD 1.3
-        RHC = 4,
-        LHC = 5,
-        UNKNOWN = 6,
-        SEQUENCE = 7,
-    SIX_Enum_END_enum
+    template<>
+    inline const std::map<std::string, PolarizationSequenceType>& string_to_T()
+    {
+        static const std::map<std::string, PolarizationSequenceType> retval
+        {
+            { "OTHER", PolarizationSequenceType::OTHER},
+            { "V", PolarizationSequenceType::V},
+            { "H", PolarizationSequenceType::H},
+            { "X", PolarizationSequenceType::X},
+            { "Y", PolarizationSequenceType::Y},
+            { "S", PolarizationSequenceType::S},
+            { "E", PolarizationSequenceType::E},
+            { "RHC", PolarizationSequenceType::RHC},
+            { "LHC", PolarizationSequenceType::LHC},
+            { "UNKNOWN", PolarizationSequenceType::UNKNOWN},
+            { "SEQUENCE", PolarizationSequenceType::SEQUENCE},
+            { "NOT SET", PolarizationSequenceType::NOT_SET},
+        };
+        return retval;
+    }
 
-    SIX_Enum_BEGIN_string_to_int
-            SIX_Enum_map_entry_(OTHER),
-            SIX_Enum_map_entry_(V),
-            SIX_Enum_map_entry_(H),
-            SIX_Enum_map_entry_(X),
-            SIX_Enum_map_entry_(Y),
-            SIX_Enum_map_entry_(S),
-            SIX_Enum_map_entry_(E),
-            SIX_Enum_map_entry_(RHC),
-            SIX_Enum_map_entry_(LHC),
-            SIX_Enum_map_entry_(UNKNOWN),
-            SIX_Enum_map_entry_(SEQUENCE),
-    SIX_Enum_END_string_to_int
-SIX_Enum_END_DEFINE(PolarizationSequenceType);
+    template<typename T>
+    inline std::map<std::string, int> string_to_int(const std::map<std::string, T>& map)
+    {
+        std::map<std::string, int> retval;
+        for (auto& kv : map)
+        {
+            retval[kv.first] = static_cast<int>(kv.second);
+        }
+        return retval;
+    }
 
+    template<typename T>
+    inline std::optional<T> toType(const std::string& s, const except::Exception* pEx)
+    {
+        static const auto map = string_to_int(string_to_T<T>());
+        return six::details::Enum<T>::toType(map, s, pEx);
+    }
+    template<typename T>
+    inline std::optional<T> toType(const std::string& s, std::nothrow_t)
+    {
+        return toType<T>(s, nullptr /*pEx*/);
+    }
+    template<typename T>
+    inline T toType(const std::string& v)
+    {
+        const except::Exception ex(Ctxt("Unknown type '" + v + "'"));
+        const auto result = toType<T>(v, &ex);
+        assert(result.has_value()); // nitf::details::index() should have already thrown, if necessary
+        return *result;
+    }
+
+    template<typename T>
+    inline std::string toString(T v, bool throw_if_not_set = false)
+    {
+        static const auto map = nitf::details::swap_key_value(string_to_int(string_to_T<T>()));
+        return six::details::EnumBase::default_toString(map, static_cast<int>(v), throw_if_not_set);
+    }
+}
 
 /*!
  *  \struct PolarizationType
