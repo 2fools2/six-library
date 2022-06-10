@@ -24,7 +24,6 @@
 #pragma once
 
 #include "Enum.h"
-#include "SIEnum.h"
 
 namespace six
 {
@@ -645,7 +644,7 @@ public:
             SIX_Enum_map_entry_(UNKNOWN),
     SIX_Enum_END_string_to_int
 
-     SIX_Enum_default_ctor_assign_(DualPolarizationType);
+    SIX_Enum_default_ctor_assign_(DualPolarizationType);
     DualPolarizationType(const std::string& s) { *this = std::move(DualPolarizationType::toType(s)); }
     DualPolarizationType(int i) : Enum<DualPolarizationType>(i) { }
 };
