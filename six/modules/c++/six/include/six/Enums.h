@@ -311,7 +311,7 @@ SIX_Enum_END_DEFINE(PixelType);
  *
  *  Enumeration used to represent PolarizationSequenceTypes
  */
-SIX_Enum_BEGIN_DEFINE(PolarizationSequenceType)
+SIX_Enum_BEGIN_DEFINE(Polarization1Type)
     //! The enumerations allowed
     SIX_Enum_BEGIN_enum
         OTHER = 1,
@@ -340,21 +340,24 @@ SIX_Enum_BEGIN_DEFINE(PolarizationSequenceType)
             SIX_Enum_map_entry_(UNKNOWN),
             SIX_Enum_map_entry_(SEQUENCE),
     SIX_Enum_END_string_to_int
-SIX_Enum_END_DEFINE(PolarizationSequenceType);
-
+SIX_Enum_END_DEFINE(Polarization1Type);
+using PolarizationSequenceType = Polarization1Type;
 
 /*!
  *  \struct PolarizationType
  *
  *  Enumeration used to represent PolarizationTypes
+ * (No SEQUENCE)
  */
-SIX_Enum_ENUM_5(PolarizationType,
+SIX_Enum_ENUM_5(Polarization2Type,
     OTHER, 1,
     V, 2,
     H, 3,
     RHC, 4,
     LHC, 5
 );
+using PolarizationType = Polarization2Type;
+
 
 /*!
  *  \struct ProjectionType

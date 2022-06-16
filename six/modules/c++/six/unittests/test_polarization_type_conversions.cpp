@@ -447,10 +447,10 @@ TEST_CASE(DualPolarizationType_EqInt)
 
 TEST_CASE(DualPolarization)
 {
-    //// https://pcf-om-mil-bb5cb050-f7c0-44fc-b114-b886abb80450.s3.us-east-1.amazonaws.com/doc/Document/NGA.STND.0024-1_1.3.0.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWDCVGY5THCA2IKOI%2F20220531%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220531T154720Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&response-cache-control=900&response-content-disposition=NGA.STND.0024-1_1.3.0.pdf&X-Amz-Signature=dc2de9c048244ce338da927ccaa26567ca8c5afc9c36aa384c21dc2e8faeec04
-    //// Allowed values include the form TX:RCV that is formed from one  TX value and one RCV value.
-    //// Allowed TX values: “V”, “H”, “X”, “Y”, “S”, “E”, “RHC”, “LHC”, “OTHER*”
-    //// Allowed RCV values:  “V”, “H”, “X”, “Y”, “S”, “E”, “RHC”, “LHC”, “OTHER*”,    
+    // https://nsgreg.nga.mil/doc/view?i=5340&month=5&day=24&year=2022
+    // Allowed values include the form TX:RCV that is formed from one  TX value and one RCV value.
+    // Allowed TX values: “V”, “H”, “X”, “Y”, “S”, “E”, “RHC”, “LHC”, “OTHER*”
+    // Allowed RCV values:  “V”, “H”, “X”, “Y”, “S”, “E”, “RHC”, “LHC”, “OTHER*”,    
 
     //const auto polarizationTypeMap = six::PolarizationType().string_to_int();
     //for (auto&& tx : polarizationTypeMap)
