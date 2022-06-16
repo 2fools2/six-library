@@ -342,15 +342,8 @@ inline const std::map<std::string, six::PolarizationSequenceType>& string_to_enu
  // The SIX_Enum macros are only marginally useful because so much must be written out anyway.
  // Minimizing their use here provides an example of how things look after the pre-processor is done.
  // Not having the macros also can make stepping through code in a debugger easier.
-class PolarizationType : public six::details::Enum<PolarizationType> // SIX_Enum_BEGIN_DEFINE(PolarizationType)
+struct PolarizationType final : public six::details::Enum<PolarizationType> // SIX_Enum_BEGIN_DEFINE(PolarizationType)
 {
-    std::string other_; // valid of OTHER.* for SIDD 3.0/SICD 1.3
-    std::string toString_(bool throw_if_not_set) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool equals_(const std::string& rhs) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool less_(const EnumBase& rhs) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
-public:
-    std::optional<PolarizationType> toType_(const std::string&, const except::Exception*) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
-
     //! The enumerations allowed
     SIX_Enum_BEGIN_enum
         OTHER = 1,
@@ -365,7 +358,7 @@ public:
         UNKNOWN = 6,
     SIX_Enum_END_enum
 
-    const std::map<std::string, int>& string_to_int() const override
+    static const std::map<std::string, int>& string_to_int_()
     {
         static const std::map<std::string, int> retval{
         SIX_Enum_map_entry_(OTHER),
@@ -395,16 +388,8 @@ public:
 // The SIX_Enum macros are only marginally useful because so much must be written out anyway.
 // Minimizing their use here provides an example of how things look after the pre-processor is done.
 // Not having the macros also can make stepping through code in a debugger easier.
-class DualPolarizationType final : public six::details::Enum<DualPolarizationType> // SIX_Enum_BEGIN_DEFINE(DualPolarizationType)
+struct DualPolarizationType final : public six::details::Enum<DualPolarizationType> // SIX_Enum_BEGIN_DEFINE(DualPolarizationType)
 {
-    PolarizationType left_,right_; // other than OTHER/NOT_SET/UNKNOWN, this is two `PolarizationType`s
-    std::string other_; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    std::string toString_(bool throw_if_not_set) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool equals_(const std::string& rhs) const override; // handle OTHER.* for SIDD 3.0/SICD 1.3
-    bool less_(const EnumBase& rhs) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
-public:
-    std::optional<DualPolarizationType> toType_(const std::string&, const except::Exception*) const override; // for OTHER.* support in SIDD 3.0/SICD 1.3
-
     //! The enumerations allowed
     SIX_Enum_BEGIN_enum
         // SICD 1.3 add a few more allowable values, which means the number of combinations explodes.
