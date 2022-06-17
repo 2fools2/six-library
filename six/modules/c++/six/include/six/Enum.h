@@ -107,18 +107,18 @@ namespace details
 
         // needed for SWIG
         static size_t size() { return int_to_string().size(); }
-        bool operator==(const int& o) const { return value == o; }
-        bool operator==(const Enum& o) const { return value == o.value; }
-        bool operator!=(const int& o) const { return value != o; }
-        bool operator!=(const Enum& o) const { return value != o.value; }
         bool operator<(const int& o) const { return value < o; }
-        bool operator<(const Enum& o) const { return value < o.value; }
-        bool operator<=(const int& o) const { return value <= o; }
-        bool operator<=(const Enum& o) const { return value <= o.value; }
-        bool operator>(const int& o) const { return value > o; }
-        bool operator>(const Enum& o) const { return value > o.value; }
-        bool operator>=(const int& o) const { return value >= o; }
-        bool operator>=(const Enum& o) const { return value >= o.value; }
+        bool operator<(const Enum& o) const { return *this < o.value; }
+        bool operator==(const int& o) const { return value == o; }
+        bool operator==(const Enum& o) const { return *this == o.value; }
+        bool operator!=(const int& o) const { return !(*this == o); }
+        bool operator!=(const Enum& o) const { return !(*this == o); }
+        bool operator<=(const int& o) const { return (*this < o) || (*this == o); }
+        bool operator<=(const Enum& o) const { return *this <= o.value; }
+        bool operator>(const int& o) const { return !(this <= o); }
+        bool operator>(const Enum& o) const { return *this > o.value; }
+        bool operator>=(const int& o) const { return !(*this < o); }
+        bool operator>=(const Enum& o) const { return *this >= o.value; }
 
         int value = NOT_SET_VALUE;
     };
