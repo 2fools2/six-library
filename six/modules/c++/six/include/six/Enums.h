@@ -340,7 +340,7 @@ struct Polarization2Type final : public six::details::Enum<Polarization2Type> //
     }
 
     SIX_Enum_default_ctor_assign_(Polarization2Type);
-    Polarization2Type(const std::string& s) { *this = std::move(Polarization2Type::toType(s)); }
+    explicit Polarization2Type(const std::string& s) { *this = std::move(Polarization2Type::toType(s)); }
     Polarization2Type(int i) : Enum<Polarization2Type>(i) { }
 };
 using PolarizationType = Polarization2Type;

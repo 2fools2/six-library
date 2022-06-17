@@ -478,7 +478,7 @@ static std::string toString_(const TSixEnum& t, const std::string& msg)
     {
         throw except::Exception(Ctxt(msg));
     }
-    return t;
+    return t.toString();
 }
 
 template <>
@@ -496,25 +496,12 @@ std::string six::toString(const PolarizationSequenceType& t)
 template <>
 PolarizationType six::toType<PolarizationType>(const std::string& s)
 {
-    const std::string msg = "Unsupported polarization type";
-    auto retval = toType_<PolarizationType>(s, msg);
-    if (retval != PolarizationType::UNKNOWN) // existing code only handled OTHER, not UNKNOWN/NOT_SET
-    {
-        return retval;
-    }
-    throw except::Exception(Ctxt(msg + " '" + s + "'"));
+    return toType_<PolarizationType>(s, "Unsupported polarization type");
 }
 template <>
 std::string six::toString(const PolarizationType& t)
 {
-    const std::string msg = "Unsupported conversion from polarization type";
-    auto retval = toString_(t, msg);
-    static const auto strUnknown = PolarizationType(PolarizationType::UNKNOWN).toString();
-    if (retval != strUnknown) // existing code only handled OTHER, not UNKNOWN/NOT_SET
-    {
-        return retval;
-    }
-    throw except::Exception(Ctxt(msg));
+    return toString_(t, "Unsupported conversion from polarization type");
 }
 
 template <>
