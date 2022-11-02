@@ -189,7 +189,7 @@ public:
      */
     void setNITFHeaderCreator(std::unique_ptr<six::NITFHeaderCreator>&& headerCreator);
 #if !CODA_OSS_cpp17
-    void setNITFHeaderCreator(mem::auto_ptr<six::NITFHeaderCreator> headerCreator);
+    void setNITFHeaderCreator(std::unique_ptr<six::NITFHeaderCreator> headerCreator);
 #endif
 
     virtual void initialize(const six::Options& options,
@@ -357,7 +357,7 @@ public:
 protected:
     nitf::Writer mWriter;
     std::map<std::string, void*> mCompressionOptions;
-    mem::auto_ptr<six::NITFHeaderCreator> mNITFHeaderCreator;
+    std::unique_ptr<six::NITFHeaderCreator> mNITFHeaderCreator;
 
     void writeNITF(nitf::IOInterface& os);
 

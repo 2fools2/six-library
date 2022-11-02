@@ -96,7 +96,7 @@ struct XMLControlRegistry
                     std::unique_ptr<XMLControlCreator>&& creator);
 #if !CODA_OSS_cpp17
     void addCreator(const std::string& identifier,
-                    mem::auto_ptr<XMLControlCreator> creator);
+                    std::unique_ptr<XMLControlCreator> creator);
 #endif
 
     /*!
@@ -116,7 +116,7 @@ struct XMLControlRegistry
     }
 #if !CODA_OSS_cpp17
     void addCreator(DataType dataType,
-                    mem::auto_ptr<XMLControlCreator> creator)
+                    std::unique_ptr<XMLControlCreator> creator)
     {
         addCreator(dataType.toString(), creator);
     }

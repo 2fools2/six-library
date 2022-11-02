@@ -92,7 +92,7 @@ public:
      */
     void addData(std::unique_ptr<Data>&& data);
 #if !CODA_OSS_cpp17    
-    void addData(mem::auto_ptr<Data> data);
+    void addData(std::unique_ptr<Data> data);
 #endif
 
 
@@ -102,7 +102,7 @@ public:
      */
     void addData(std::unique_ptr<Data>&& data, std::unique_ptr<Legend>&& legend);
 #if !CODA_OSS_cpp17
-    void addData(mem::auto_ptr<Data> data, mem::auto_ptr<Legend> legend);
+    void addData(std::unique_ptr<Data> data, std::unique_ptr<Legend> legend);
 #endif
 
     /*!
@@ -194,7 +194,7 @@ private:
     void addData(std::unique_ptr<Data>&& data,
                  mem::ScopedCopyablePtr<Legend> legend);
 #if !CODA_OSS_cpp17
-    void addData(mem::auto_ptr<Data> data,
+    void addData(std::unique_ptr<Data> data,
                  mem::ScopedCopyablePtr<Legend> legend);
 #endif
 };

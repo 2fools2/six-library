@@ -60,7 +60,7 @@ void XMLControlRegistry::addCreator(const std::string& identifier,
 }
 #if !CODA_OSS_cpp17
 void XMLControlRegistry::addCreator(const std::string& identifier,
-                                    mem::auto_ptr<XMLControlCreator> creator)
+                                    std::unique_ptr<XMLControlCreator> creator)
 {
     addCreator(identifier, std::unique_ptr<XMLControlCreator>(creator.release()));
 }

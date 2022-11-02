@@ -45,7 +45,7 @@ ByteProvider::ByteProvider(const six::NITFHeaderCreator& headerCreator,
     initialize(headerCreator, schemaPaths, desBuffers);
 }
 #if !CODA_OSS_cpp17
-ByteProvider::ByteProvider(mem::auto_ptr<six::NITFHeaderCreator> headerCreator,
+ByteProvider::ByteProvider(std::unique_ptr<six::NITFHeaderCreator> headerCreator,
     const std::vector<std::string>& schemaPaths,
     const std::vector<PtrAndLength>& desBuffers)
     : ByteProvider(*headerCreator, schemaPaths, desBuffers)
@@ -264,7 +264,7 @@ void ByteProvider::initialize(const six::NITFHeaderCreator& headerCreator,
                                    numColsPerBlock);
 }
 #if !CODA_OSS_cpp17
-void ByteProvider::initialize(mem::auto_ptr<six::NITFHeaderCreator> headerCreator_,
+void ByteProvider::initialize(std::unique_ptr<six::NITFHeaderCreator> headerCreator_,
     const std::vector<std::string>& schemaPaths,
     const std::vector<PtrAndLength>& desBuffers)
 {

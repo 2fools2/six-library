@@ -45,7 +45,7 @@ ComplexXMLParser04x::ComplexXMLParser04x(
 ComplexXMLParser04x::ComplexXMLParser04x(
     const std::string& strVersion,
     bool addClassAttributes,
-    mem::auto_ptr<SICommonXMLParser> comParser,
+    std::unique_ptr<SICommonXMLParser> comParser,
     logging::Logger* log,
     bool ownLog) :
     ComplexXMLParser04x(strVersion, addClassAttributes, std::unique_ptr<SICommonXMLParser>(comParser.release()), log, ownLog)

@@ -67,7 +67,7 @@ public:
                  const std::vector<std::string>& schemaPaths,
                  const std::vector<PtrAndLength>& desBuffers);
 #if !CODA_OSS_cpp17
-    ByteProvider(mem::auto_ptr<six::NITFHeaderCreator> headerCreator,
+    ByteProvider(std::unique_ptr<six::NITFHeaderCreator> headerCreator,
                  const std::vector<std::string>& schemaPaths,
                  const std::vector<PtrAndLength>& desBuffers);
 #endif
@@ -148,7 +148,7 @@ public:
                     const std::vector<std::string>& schemaPaths,
                     const std::vector<PtrAndLength>& desBuffers);
 #if !CODA_OSS_cpp17
-    void initialize(mem::auto_ptr<six::NITFHeaderCreator> headerCreator,
+    void initialize(std::unique_ptr<six::NITFHeaderCreator> headerCreator,
                     const std::vector<std::string>& schemaPaths,
                     const std::vector<PtrAndLength>& desBuffers);
 #endif
