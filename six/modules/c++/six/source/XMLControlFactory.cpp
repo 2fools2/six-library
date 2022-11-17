@@ -39,7 +39,7 @@ XMLControlRegistry::~XMLControlRegistry()
 }
 
 void XMLControlRegistry::addCreator(const std::string& identifier,
-                                    std::unique_ptr<XMLControlCreator>&& creator)
+                                    mem::AutoPtr<XMLControlCreator> creator)
 {
     const RegistryMap::iterator iter(mRegistry.lower_bound(identifier));
     if (iter == mRegistry.end() || iter->first != identifier)
@@ -58,13 +58,6 @@ void XMLControlRegistry::addCreator(const std::string& identifier,
     // At this point we've taken ownership
     creator.release();
 }
-#if !CODA_OSS_cpp17
-void XMLControlRegistry::addCreator(const std::string& identifier,
-                                    std::unique_ptr<XMLControlCreator> creator)
-{
-    addCreator(identifier, std::unique_ptr<XMLControlCreator>(creator.release()));
-}
-#endif
 
 XMLControl*
 XMLControlRegistry::newXMLControl(const std::string& identifier,

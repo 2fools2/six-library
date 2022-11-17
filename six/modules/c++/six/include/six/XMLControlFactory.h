@@ -27,6 +27,8 @@
 #include <std/filesystem>
 #include <std/string>
 
+#include <mem/AutoPtr.h>
+
 #include <scene/sys_Conf.h>
 
 #include "six/XMLControl.h"
@@ -93,11 +95,7 @@ struct XMLControlRegistry
     virtual ~XMLControlRegistry();
 
     void addCreator(const std::string& identifier,
-                    std::unique_ptr<XMLControlCreator>&& creator);
-#if !CODA_OSS_cpp17
-    void addCreator(const std::string& identifier,
-                    std::unique_ptr<XMLControlCreator> creator);
-#endif
+                    mem::AutoPtr<XMLControlCreator> creator);
 
     /*!
      * Takes ownership of creator
@@ -110,17 +108,10 @@ struct XMLControlRegistry
     }
 
     void addCreator(DataType dataType,
-                    std::unique_ptr<XMLControlCreator>&& creator)
-    {
-        addCreator(dataType.toString(), std::move(creator));
-    }
-#if !CODA_OSS_cpp17
-    void addCreator(DataType dataType,
-                    std::unique_ptr<XMLControlCreator> creator)
+                    mem::AutoPtr<XMLControlCreator> creator)
     {
         addCreator(dataType.toString(), creator);
     }
-#endif
 
     /*!
      * Takes ownership of creator
