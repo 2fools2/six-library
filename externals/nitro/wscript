@@ -22,11 +22,11 @@ def configure(conf):
     conf.load(TOOLS, tooldir='build')
 
     if conf.env['COMPILER_CXX'] == 'msvc':
-       conf.env.CXXFLAGS += ['/std:c++14'];
+       conf.env.CXXFLAGS += ['/std:c++17'];
 
     if conf.env['COMPILER_CXX'] != 'msvc':
         conf.env.CFLAGS += ['-Wall'];
-        conf.env.CXXFLAGS += ['-Wall', '-std=c++14'];
+        conf.env.CXXFLAGS += ['-Wall', '-std=c++17'];
 
     conf.recurse(DIRS)
 
