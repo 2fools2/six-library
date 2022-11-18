@@ -23,12 +23,14 @@
 
 #ifndef __TIFF_IFD_ENTRY_H__
 #define __TIFF_IFD_ENTRY_H__
+#pragma once
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <import/io.h>
 #include "tiff/GenericType.h"
+#include "sys/Conf.h"
 
 namespace tiff
 {
@@ -260,7 +262,7 @@ public:
      * @param value
      *   the tiff::GenericType to add as a value
      *****************************************************************/
-    void addValue(std::auto_ptr<tiff::TypeInterface> value)
+    void addValue(std::unique_ptr<tiff::TypeInterface>&& value)
     {
         mValues.push_back(value.get());
         ++mCount;

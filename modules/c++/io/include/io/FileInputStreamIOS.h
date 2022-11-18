@@ -28,11 +28,15 @@
 #include <ios>
 #include <iostream>
 #include <fstream>
+#include <std/filesystem>
+
 #include "except/Exception.h"
 #include "io/InputStream.h"
 #include "io/SeekableStreams.h"
 
-/*!
+
+
+ /*!
  *  \file FileInputStreamIOS.h
  *  \brief The InputStream representation of a file
  *  \todo  Redefine the readln function to use getline() 
@@ -64,9 +68,8 @@ public:
      *  \param inputFile The file name
      *  \param mode The mode to open the file in
      */
-    FileInputStreamIOS(const std::string& inputFile,
+    FileInputStreamIOS(const std::filesystem::path& inputFile,
                        std::ios::openmode mode = std::ios::in);
-
 
     /*!
      *  Alternate Constructor.  Takes an input file and a mode
