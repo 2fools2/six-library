@@ -20,14 +20,17 @@
  *
  */
 
-#ifndef __IO_FILE_OUTPUT_STREAM_OS_H__
-#define __IO_FILE_OUTPUT_STREAM_OS_H__
+#ifndef CODA_OSS_io_FileOutputStreamOS_h_INCLUDED_
+#define CODA_OSS_io_FileOutputStreamOS_h_INCLUDED_
+#pragma once
+
+#include <string>
+#include <std/filesystem>
 
 #if !defined(USE_IO_STREAMS)
 
 #include "io/SeekableStreams.h"
 #include "sys/File.h"
-
 
 /*!
  *  \file FileOutputStream.h
@@ -53,19 +56,17 @@ class FileOutputStreamOS : public SeekableOutputStream
 protected:
     sys::File mFile;
 public:
-    //!  Default constructor
-    FileOutputStreamOS()
-    {}
+    FileOutputStreamOS() = default;
 
+    using path = std::filesystem::path; // still used in SWIG bindings
 
     /*!
      *  Alternate Constructor.  Takes an output file and a mode
      *  \param outputFile The file name
      *  \param creationFlags  see sys::File
      */
-    FileOutputStreamOS(const std::string& outputFile,
+    FileOutputStreamOS(const std::filesystem::path& outputFile,
                        int creationFlags = sys::File::CREATE | sys::File::TRUNCATE);
-
 
     //! Destructor, closes the file stream.
     virtual ~FileOutputStreamOS()
@@ -80,7 +81,7 @@ public:
      *  Report whether or not the file is open
      *  \return True if file is open
      */
-    virtual bool isOpen()
+    virtual bool isOpen() const noexcept
     {
         return mFile.isOpen();
     }
@@ -90,7 +91,7 @@ public:
      *  \param file The file to open
      *  \param creationFlags see sys::File
      */
-    virtual void create(const std::string& str,
+    virtual void create(const std::filesystem::path& str,
                         int creationFlags = sys::File::CREATE | sys::File::TRUNCATE);
 
     //!  Close the file
@@ -120,5 +121,4 @@ public:
 }
 
 #endif
-#endif
-
+#endif // CODA_OSS_io_FileOutputStreamOS_h_INCLUDED_
