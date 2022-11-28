@@ -66,8 +66,7 @@ public:
     ByteProvider(const six::NITFHeaderCreator& headerCreator,
                  const std::vector<std::string>& schemaPaths,
                  const std::vector<PtrAndLength>& desBuffers);
-#if !CODA_OSS_cpp17
-    ByteProvider(std::unique_ptr<six::NITFHeaderCreator> headerCreator,
+    ByteProvider(const std::unique_ptr<six::NITFHeaderCreator>& headerCreator,
                  const std::vector<std::string>& schemaPaths,
                  const std::vector<PtrAndLength>& desBuffers);
 
@@ -146,8 +145,7 @@ public:
     void initialize(const six::NITFHeaderCreator& headerCreator,
                     const std::vector<std::string>& schemaPaths,
                     const std::vector<PtrAndLength>& desBuffers);
-#if !CODA_OSS_cpp17
-    void initialize(std::unique_ptr<six::NITFHeaderCreator> headerCreator,
+    void initialize(const std::unique_ptr<six::NITFHeaderCreator>& headerCreator,
                     const std::vector<std::string>& schemaPaths,
                     const std::vector<PtrAndLength>& desBuffers);
 protected:

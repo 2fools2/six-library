@@ -67,11 +67,6 @@ protected:
     DerivedXMLParser(const std::string& version,
         std::unique_ptr<six::SICommonXMLParser>&&,
         logging::Logger&);
-#if !CODA_OSS_cpp17
-    DerivedXMLParser(const std::string& version,
-        std::unique_ptr<six::SICommonXMLParser> comParser,
-        logging::Logger* log = nullptr, bool ownLog = false);
-#endif
 
     virtual void parseDerivedClassificationFromXML(
             const xml::lite::Element* classificationElem,

@@ -56,17 +56,6 @@ DerivedXMLParser::DerivedXMLParser(const std::string& strVersion,
     logging::Logger& log) : XMLParser(versionToURI(strVersion), false, log),
     mCommon(std::move(comParser)) { }
 
-#if !CODA_OSS_cpp17
-DerivedXMLParser::DerivedXMLParser(
-        const std::string& strVersion,
-        std::unique_ptr<six::SICommonXMLParser> comParser,
-        logging::Logger* log,
-        bool ownLog) :
-    DerivedXMLParser(strVersion, std::unique_ptr<six::SICommonXMLParser>(comParser.release()), log, ownLog)
-{
-}
-#endif
-
 void DerivedXMLParser::getAttributeList(
         const xml::lite::Attributes& attributes,
         const std::string& attributeName,

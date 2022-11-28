@@ -386,15 +386,6 @@ static void getModelComponents_(const ComplexData& complexData,
         AreaPlaneUtility::deriveAreaPlane(complexData, areaPlane);
     }
 }
-#if !CODA_OSS_cpp17
-void Utilities::getModelComponents(const ComplexData& complexData,
-        std::unique_ptr<scene::SceneGeometry>& geometry,
-        std::unique_ptr<scene::ProjectionModel>& projectionModel,
-        AreaPlane& areaPlane)
-{
-    getModelComponents_(complexData, geometry, projectionModel, areaPlane);
-}
-#endif
 void Utilities::getModelComponents(const ComplexData& complexData,
         std::unique_ptr<scene::SceneGeometry>& geometry,
         std::unique_ptr<scene::ProjectionModel>& projectionModel,
@@ -595,15 +586,6 @@ static void readSicd_(const std::string& sicdPathname,
     // own an XMLControlRegistry
     reader.setXMLControlRegistry();
 }
-#if !CODA_OSS_cpp17
-void Utilities::readSicd(const std::string& sicdPathname,
-                         const std::vector<std::string>& schemaPaths,
-                         std::unique_ptr<ComplexData>& complexData,
-                         std::vector<std::complex<float>>& widebandData)
-{
-    readSicd_(sicdPathname, schemaPaths, complexData, widebandData);
-}
-#endif
 void Utilities::readSicd(const std::string& sicdPathname,
                          const std::vector<std::string>& schemaPaths,
                          std::unique_ptr<ComplexData>& complexData,
@@ -660,22 +642,7 @@ static void readSicd_(const std::string& sicdPathname,
 
     reader.setXMLControlRegistry();
 }
-#if !CODA_OSS_cpp17
-void Utilities::readSicd(const std::string& sicdPathname,
-                         const std::vector<std::string>& schemaPaths,
-                         size_t orderX,
-                         size_t orderY,
-                         std::unique_ptr<ComplexData>& complexData,
-                         std::vector<std::complex<float>>& widebandData,
-                         six::Poly2D& outputRowColToSlantRow,
-                         six::Poly2D& outputRowColToSlantCol,
-                         std::unique_ptr<NoiseMesh>& noiseMesh,
-                         std::unique_ptr<ScalarMesh>& scalarMesh)
-{
-    readSicd_(sicdPathname, schemaPaths, orderX, orderY, complexData, widebandData,
-        outputRowColToSlantRow, outputRowColToSlantCol, noiseMesh, scalarMesh);
-}
-#endif
+
 void Utilities::readSicd(const std::string& sicdPathname,
                          const std::vector<std::string>& schemaPaths,
                          size_t orderX,
@@ -1381,17 +1348,6 @@ static void getProjectionPolys_(const NITFReadControl& reader,
                                outputRowColToSlantRow,
                                outputRowColToSlantCol);
 }
-#if !CODA_OSS_cpp17
-void Utilities::getProjectionPolys(const NITFReadControl& reader,
-                                   size_t orderX,
-                                   size_t orderY,
-                                   std::unique_ptr<ComplexData>& complexData,
-                                   six::Poly2D& outputRowColToSlantRow,
-                                   six::Poly2D& outputRowColToSlantCol)
-{
-    getProjectionPolys_(reader, orderX, orderY, complexData, outputRowColToSlantRow, outputRowColToSlantCol);
-}
-#endif
 void Utilities::getProjectionPolys(const NITFReadControl& reader,
                                    size_t orderX,
                                    size_t orderY,
