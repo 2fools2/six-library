@@ -110,7 +110,8 @@ struct XMLControlRegistry
     void addCreator(DataType dataType,
                     mem::AutoPtr<XMLControlCreator> creator)
     {
-        addCreator(dataType.toString(), creator);
+        std::unique_ptr<XMLControlCreator> creator(creator_.release());
+        addCreator(dataType, std::move(creator));
     }
 
     /*!

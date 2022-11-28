@@ -51,7 +51,6 @@ ByteProvider::ByteProvider(std::unique_ptr<six::NITFHeaderCreator> headerCreator
     : ByteProvider(*headerCreator, schemaPaths, desBuffers)
 {
 }
-#endif
 
 void ByteProvider::populateOptions(
         std::shared_ptr<Container> container,
@@ -271,6 +270,5 @@ void ByteProvider::initialize(std::unique_ptr<six::NITFHeaderCreator> headerCrea
     const auto& headerCreator = *headerCreator_;
     initialize(headerCreator, schemaPaths, desBuffers);
 }
-#endif
 
 }
