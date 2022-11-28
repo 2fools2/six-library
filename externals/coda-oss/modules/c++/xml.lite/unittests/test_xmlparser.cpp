@@ -31,6 +31,7 @@
 #include "str/EncodedString.h"
 #include "coda_oss/CPlusPlus.h"
 #include "sys/OS.h"
+#include "sys/FileFinder.h"
 #include <TestCase.h>
 
 #include "xml/lite/MinidomParser.h"
@@ -58,19 +59,16 @@ static const std::string strUtf8Xml = str::c_str<std::string>(strUtf8Xml8);
 
 static const std::string  platfromText_ = sys::Platform == sys::PlatformType::Windows ?  pIso88591Text_ : pUtf8Text_;
 
-namespace fs = std::filesystem;
-
-static fs::path findRoot(const fs::path& p)
+static std::filesystem::path findRootDirectory(const std::filesystem::path& p)
 {
-    if (is_regular_file(p / "LICENSE")  && is_regular_file(p / "README.md")  && is_regular_file(p / "CMakeLists.txt"))
-    {
-        return p;
-    }
-    return findRoot(p.parent_path());
+    // specific to CODA-OSS
+    const auto isRoot = [](const std::filesystem::path& p) { return is_regular_file(p / "coda-oss-lite.sln") &&
+        is_regular_file(p / "LICENSE") && is_regular_file(p / "README.md") && is_regular_file(p / "CMakeLists.txt"); };
+    return sys::test::findRootDirectory(p, "coda-oss", isRoot);
 }
-inline fs::path findRoot()
+inline std::filesystem::path findRoot()
 {
-    return findRoot(fs::current_path());
+    return findRootDirectory(std::filesystem::current_path());
 }
 
 static void test_a_element(const std::string& testName, const xml::lite::Element& root)
@@ -259,6 +257,63 @@ TEST_CASE(testXmlConsoleOutput)
     }
 }
 
+TEST_CASE(testXmlCreateRoot)
+{
+    xml::lite::MinidomParser xmlParser;
+    auto& document = getDocument(xmlParser);
+
+    const auto pDocuments = document.createElement(xml::lite::QName(xml::lite::Uri(), "documents"), "");
+
+    io::StringStream output;
+    pDocuments->print(output);
+    auto actual = output.stream().str();
+    TEST_ASSERT_EQ("<documents/>", actual);
+
+    pDocuments->setCharacterData("test");
+    output.reset();
+    pDocuments->print(output);
+    actual = output.stream().str();
+    TEST_ASSERT_EQ("<documents>test</documents>", actual);
+}
+
+TEST_CASE(testXmlCreateNested)
+{
+    xml::lite::MinidomParser xmlParser;
+    auto& document = getDocument(xmlParser);
+
+    const auto pDocuments = document.createElement(xml::lite::QName(xml::lite::Uri(), "documents"), "");
+    xml::lite::AttributeNode a;
+    a.setQName("count");
+    a.setValue("1");
+    pDocuments->getAttributes().add(a);
+
+    auto& html = pDocuments->addChild(xml::lite::Element::create(xml::lite::QName("html")));
+    html.addChild(xml::lite::Element::create(xml::lite::QName("title"), "Title"));
+    auto& body = html.addChild(xml::lite::Element::create(xml::lite::QName("body")));
+
+    auto& p = body.addChild(xml::lite::Element::create(xml::lite::QName("p"), "paragraph"));
+    a.setQName("a");
+    a.setValue("abc");
+    p.getAttributes().add(a);
+
+    body.addChild(xml::lite::Element::create(xml::lite::QName("br")));
+
+    io::StringStream output;
+    pDocuments->print(output);
+    auto actual = output.stream().str();
+    const auto expected =
+        "<documents count=\"1\">"
+            "<html>"
+                "<title>Title</title>"
+                "<body>"
+                    "<p a=\"abc\">paragraph</p>"
+                    "<br/>"
+                "</body>"
+             "</html>"
+        "</documents>";
+    TEST_ASSERT_EQ(expected, actual);
+}
+
 TEST_CASE(testXmlParseAndPrintUtf8)
 {
     io::StringStream input;
@@ -430,7 +485,7 @@ TEST_CASE(testReadEmbeddedXml)
     const auto characterData = classificationXML.getCharacterData();
     TEST_ASSERT_EQ(characterData, classificationText_platform);
 
-    const str::EncodedStringView expectedCharDataView(str::c_str<std::u8string>(classificationText_utf_8));
+    const str::EncodedStringView expectedCharDataView(str::c_str<std::u8string>(classificationText_utf_8), classificationText_utf_8.length());
     std::u8string u8_characterData;
     classificationXML.getCharacterData(u8_characterData);
     TEST_ASSERT_EQ(u8_characterData, expectedCharDataView);
@@ -504,6 +559,8 @@ int main(int, char**)
     TEST_CHECK(testXmlParseAndPrintUtf8);
     TEST_CHECK(testXmlPrintUtf8);
     TEST_CHECK(testXmlConsoleOutput);
+    TEST_CHECK(testXmlCreateRoot);
+    TEST_CHECK(testXmlCreateNested);
     
     TEST_CHECK(testReadEncodedXmlFiles);
     TEST_CHECK(testReadXmlFiles);

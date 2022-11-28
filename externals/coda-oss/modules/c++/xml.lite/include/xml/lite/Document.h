@@ -56,7 +56,7 @@ namespace lite
  * Use the Document to access the Element nodes contained within.
  * The DocumentParser will build a tree that you can use.
  */
-struct Document final
+struct Document // SOAPDocument derives :-(
 {
     //! Constructor
     Document(Element* rootNode = nullptr, bool own = true) :
@@ -74,7 +74,7 @@ struct Document final
      * Destroy the xml tree.  This deletes the nodes if they exist
      * Careful, this may delete your copy if you are not careful
      */
-    ~Document() noexcept(false)
+    virtual ~Document() noexcept(false)
     {
         destroy();
     }
@@ -82,9 +82,9 @@ struct Document final
     #ifndef SWIG // SWIG doesn't like std::unique_ptr
     std::unique_ptr<Document>& clone(std::unique_ptr<Document>& doc) const
     {
-        doc = coda_oss::make_unique<Document>();
+        doc = std::make_unique<Document>();
 
-        auto cloneRoot = coda_oss::make_unique<Element>();
+        auto cloneRoot = std::make_unique<Element>();
         cloneRoot->clone(*mRootNode);
         doc->setRootElement(std::move(cloneRoot));
         return doc;

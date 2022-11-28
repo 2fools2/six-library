@@ -9,6 +9,8 @@ project(coda-oss)
 set(CMAKE_CXX_STANDARD 20)
 set(CXX_STANDARD_REQUIRED true)
 
+project(coda-oss)
+
 if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     # build and package with conan
     include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")

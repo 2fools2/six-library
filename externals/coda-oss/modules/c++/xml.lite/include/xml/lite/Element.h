@@ -60,7 +60,7 @@ namespace lite
  * This class stores all of the element information about an XML
  * document.
  */
-struct Element final
+struct Element // SOAPElement derives :-(
 {
     Element() = default;
 
@@ -88,7 +88,7 @@ struct Element final
     #endif // SWIG
     
     //! Destructor
-    ~Element() noexcept(false)
+    virtual ~Element() noexcept(false)
     {
         destroyChildren();
     }
@@ -394,6 +394,12 @@ struct Element final
         mName.getAssociatedUri(result);
     }
 
+    void setPrefix(const std::string& prefix)
+    {
+        mName.setPrefix(prefix);
+    }
+
+
     /*!
      *  Adds a child element to this element
      *  \param node the child element to add
@@ -407,9 +413,6 @@ struct Element final
     #ifndef SWIG // SWIG doesn't like std::unique_ptr
     virtual Element& addChild(std::unique_ptr<Element>&& node);
     #endif // SWIG
-    #if CODA_OSS_autoptr_is_std  // std::auto_ptr removed in C++17
-    virtual Element& addChild(mem::auto_ptr<Element> node);
-    #endif
 
     /*!
      *  Returns all of the children of this element
@@ -447,6 +450,11 @@ struct Element final
         mParent = parent;
     }
 
+protected:
+    //! The children of this element
+    std::vector<Element*> mChildren;
+    xml::lite::QName mName;
+
 private:
     void changePrefix(Element* element,
                       const std::string& prefix,
@@ -459,9 +467,6 @@ private:
     void depthPrint(io::OutputStream& stream, int depth, const std::string& formatter, bool isConsoleOutput = false) const;
 
     Element* mParent = nullptr;
-    //! The children of this element
-    std::vector<Element*> mChildren;
-    xml::lite::QName mName;
     //! The attributes for this element
     xml::lite::Attributes mAttributes;
     coda_oss::u8string mCharacterData;

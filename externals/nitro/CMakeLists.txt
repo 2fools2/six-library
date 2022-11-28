@@ -22,9 +22,8 @@ if (${CMAKE_PROJECT_NAME} STREQUAL nitro)
             # https://docs.microsoft.com/en-us/cpp/sanitizers/asan?view=msvc-160
             add_compile_options(/fsanitize=address)
         endif()
+	add_compile_options(/std:c++17)
     elseif (UNIX)
-	set(CMAKE_C_COMPILER gcc-10)
-	set(CMAKE_CXX_COMPILER g++-10)
         add_compile_options(-std=c++20)
         add_compile_options(
             -Wall
@@ -36,6 +35,7 @@ if (${CMAKE_PROJECT_NAME} STREQUAL nitro)
             # https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html
             add_compile_options(-fsanitize=address)
         endif()
+	add_compile_options(-std=c++17)
     endif()
 
     if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
