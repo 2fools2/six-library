@@ -21,6 +21,10 @@
  */
 
 #include <string.h>
+
+#ifdef _WIN32
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
 #include "net/NetConnectionClientFactory.h"
 
 namespace
@@ -57,9 +61,9 @@ net::NetConnection* net::NetConnectionClientFactory::create(const net::URL& url)
 }
 
 net::NetConnection* net::NetConnectionClientFactory::newConnection(
-        std::auto_ptr<net::Socket> toServer)
+        std::unique_ptr<net::Socket>&& toServer)
 {
-    return new net::NetConnection(toServer);
+    return new net::NetConnection(std::move(toServer));
 }
 
 net::NetConnection * net::NetConnectionClientFactory::create(
