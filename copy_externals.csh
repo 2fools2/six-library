@@ -1,10 +1,10 @@
 #!/bin/csh -f
 
 rm -r -f tmp && mkdir tmp && cd tmp
-git clone -b main git@github.com:mdaus/coda-oss.git
+git clone -b cpp17 git@github.com:mdaus/coda-oss.git
 rm -r -f coda-oss/.git
 
-git clone -b main git@github.com:mdaus/nitro.git
+git clone -b cpp17 git@github.com:mdaus/nitro.git
 rm -r -f nitro/.git
 rm -r -f nitro/externals
 
