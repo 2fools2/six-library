@@ -84,6 +84,7 @@ public:
      *
      */
     virtual NetConnection* newConnection(std::unique_ptr<Socket>&& toServer);
+
     /*!
      * Destroy a spawned connection.
      * \param connection The connection to destroy
