@@ -27,8 +27,7 @@
 
 #include <memory>
 
-#include "coda_oss/memory.h"
-#include "mem/SharedPtr.h"
+#include "coda_oss/CPlusPlus.h"
 
 namespace mem
 {
@@ -81,6 +80,7 @@ public:
         *this = std::move(p);
     }
 
+    #if !CODA_OSS_cpp17
     template<typename U>
     AutoPtr& operator=(std::auto_ptr<U> p) noexcept
     {
@@ -92,6 +92,7 @@ public:
     {
         *this = p;
     }
+    #endif // CODA_OSS_cpp17
 
 
     T* get() const noexcept

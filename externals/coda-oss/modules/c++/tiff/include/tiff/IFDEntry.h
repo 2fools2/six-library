@@ -268,6 +268,7 @@ public:
         ++mCount;
         value.release();
     }
+
     /**
      *****************************************************************
      * Adds a double value to the IFD entry.
