@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/tcsh -f
 
 git remote add -f coda-oss_remote https://github.com/mdaus/coda-oss.git
 git remote add -f nitro_remote https://github.com/mdaus/nitro.git
