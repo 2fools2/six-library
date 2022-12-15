@@ -108,8 +108,8 @@ void SICDSensorModel::initializeFromFile(const std::string& pathname)
                 container->getData(0)->clone()));
 
         // get xml as string for sensor model state
-        const auto xmlStr = six::toXMLString(mData.get(), &xmlRegistry);
-        mSensorModelState = NAME + std::string(" ") + str::EncodedStringView(xmlStr).native();
+        const auto xmlStr = six::toXMLString_(mData.get(), &xmlRegistry);
+        mSensorModelState = NAME + std::string(" ") + xmlStr;
         reinitialize();
     }
     catch (const except::Exception& ex)
@@ -400,12 +400,7 @@ csm::ImageCoord SICDSensorModel::getImageStart() const
 std::vector<double>
 SICDSensorModel::getSIXUnmodeledError() const
 {
-    assert(mData.get() != nullptr);
-    if (auto pErrorStatistics = mData->errorStatistics.get())
-    {
-        return SIXSensorModel::getSIXUnmodeledError_(*pErrorStatistics);
-    }
-    return {};
+    return SIXSensorModel::getSIXUnmodeledError_(mData->errorStatistics.get());
 }
 
 void SICDSensorModel::replaceModelStateImpl(const std::string& sensorModelState)

@@ -678,14 +678,16 @@ protected:
     DataType getDataType(const csm::Des& des);
 
 protected:
-    static std::vector<double> getSIXUnmodeledError_(const six::ErrorStatistics&);
+    virtual std::vector<double> getSIXUnmodeledError() const = 0;
+    // utility routine to avoid duplicating code.
+    static std::vector<double> getSIXUnmodeledError_(const six::ErrorStatistics*);
 
     const scene::ECEFToLLATransform mECEFToLLA;
     const csm::NoCorrelationModel mCorrelationModel;
     std::vector<std::string> mSchemaDirs;
     std::string mSensorModelState;
-    mem::auto_ptr<const scene::SceneGeometry> mGeometry;
-    mem::auto_ptr<scene::ProjectionModel> mProjection;
+    std::unique_ptr<const scene::SceneGeometry> mGeometry;
+    std::unique_ptr<scene::ProjectionModel> mProjection;
     csm::param::Type mAdjustableTypes[scene::AdjustableParams::NUM_PARAMS];
 
     // NOTE: This is computed just at the SCP once each time a new SICD is

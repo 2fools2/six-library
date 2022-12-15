@@ -26,6 +26,7 @@
 
 #include <io/StringStream.h>
 #include <logging/NullLogger.h>
+#include <str/EncodedStringView.h>
 #include <six/Utilities.h>
 #include <six/XmlLite.h>
 
@@ -63,13 +64,17 @@ std::string CPHDXMLControl::getSICommonURI() const
     return CPHD03_URI;
 }
 
-std::string CPHDXMLControl::toXMLString(const Metadata& metadata)
+std::u8string CPHDXMLControl::toXMLString(const Metadata& metadata)
 {
     std::unique_ptr<xml::lite::Document> doc(toXML( metadata));
-    io::StringStream ss;
+    io::U8StringStream ss;
     doc->getRootElement()->print(ss);
 
-    return (std::string("<?xml version=\"1.0\"?>") + ss.stream().str());
+    return str::EncodedStringView("<?xml version=\"1.0\"?>").u8string() + ss.stream().str();
+}
+std::string CPHDXMLControl::toXMLString_(const Metadata& metadata)
+{
+    return str::EncodedStringView(toXMLString(metadata)).native();
 }
 
 size_t CPHDXMLControl::getXMLsize(const Metadata& metadata)
@@ -77,7 +82,7 @@ size_t CPHDXMLControl::getXMLsize(const Metadata& metadata)
     return toXMLString(metadata).size();
 }
 
-mem::auto_ptr<xml::lite::Document> CPHDXMLControl::toXML(const Metadata& metadata)
+std::unique_ptr<xml::lite::Document> CPHDXMLControl::toXML(const Metadata& metadata)
 {
     auto doc = std::make_unique<xml::lite::Document>();
 
@@ -100,7 +105,7 @@ mem::auto_ptr<xml::lite::Document> CPHDXMLControl::toXML(const Metadata& metadat
     //set the XMLNS
     root->setNamespacePrefix("", getDefaultURI());
 
-    return mem::auto_ptr<xml::lite::Document>(doc.release());
+    return std::unique_ptr<xml::lite::Document>(doc.release());
 }
 
 XMLElem CPHDXMLControl::createLatLonAltFootprint(const std::string& name,
@@ -486,16 +491,21 @@ XMLElem CPHDXMLControl::areaSampleDirectionParametersToXML(
     return adpXML;
 }
 
-mem::auto_ptr<Metadata> CPHDXMLControl::fromXML(const std::string& xmlString)
+std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::string& xmlString)
 {
-    io::StringStream stringStream;
+    auto result = fromXML(str::EncodedStringView(xmlString).u8string());
+    return std::unique_ptr<Metadata>(result.release());
+}
+std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::u8string& xmlString)
+{
+    io::U8StringStream stringStream;
     stringStream.write(xmlString);
     six::MinidomParser parser;
     parser.parse(stringStream);
     return fromXML(&parser.getDocument());
 }
 
-mem::auto_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc)
+std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc)
 {
     auto cphd03 = std::make_unique<Metadata>();
 
@@ -525,7 +535,7 @@ mem::auto_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc)
 
     fromXML(vectorParametersXML, cphd03->vectorParameters);
 
-    return mem::auto_ptr<Metadata>(cphd03.release());
+    return std::unique_ptr<Metadata>(cphd03.release());
 }
 Metadata CPHDXMLControl::fromXML(const xml::lite::Document& doc)
 {

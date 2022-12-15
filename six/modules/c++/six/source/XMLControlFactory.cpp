@@ -25,6 +25,7 @@
 #include "six/XMLControlFactory.h"
 #include <str/Convert.h>
 #include <logging/NullLogger.h>
+#include <str/EncodedStringView.h>
 #include "six/Data.h"
 
 using namespace six;
@@ -57,13 +58,6 @@ void XMLControlRegistry::addCreator(const std::string& identifier,
     // At this point we've taken ownership
     creator.release();
 }
-#if !CODA_OSS_cpp17
-void XMLControlRegistry::addCreator(const std::string& identifier,
-                                    mem::auto_ptr<XMLControlCreator> creator)
-{
-    addCreator(identifier, std::unique_ptr<XMLControlCreator>(creator.release()));
-}
-#endif
 
 XMLControl*
 XMLControlRegistry::newXMLControl(const std::string& identifier,
@@ -84,6 +78,12 @@ std::u8string six::toXMLString(const Data* data,
     logging::NullLogger log;
     return toValidXMLString(data, std::vector<std::string>(),
                             &log, xmlRegistry);
+}
+std::string six::toXMLString_(const Data* data,
+    const six::XMLControlRegistry* xmlRegistry)
+{
+    const auto result = toXMLString(data, xmlRegistry);
+    return str::EncodedStringView(result).native();
 }
 
 template<typename TSchemaPaths>

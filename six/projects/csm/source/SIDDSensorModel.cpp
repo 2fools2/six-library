@@ -140,8 +140,8 @@ void SIDDSensorModel::initializeFromFile(const std::string& pathname,
         mData.reset(reinterpret_cast<six::sidd::DerivedData*>(data->clone()));
 
         // get xml as string for sensor model state
-        const auto xmlStr = six::toXMLString(mData.get(), &xmlRegistry);
-        mSensorModelState = NAME + std::string(" ") + str::EncodedStringView(xmlStr).native();
+        const auto xmlStr = six::toXMLString_(mData.get(), &xmlRegistry);
+        mSensorModelState = NAME + std::string(" ") + xmlStr;
         reinitialize();
     }
     catch (const except::Exception& ex)
@@ -454,12 +454,7 @@ const six::sidd::MeasurableProjection* SIDDSensorModel::getProjection() const
 std::vector<double>
 SIDDSensorModel::getSIXUnmodeledError() const
 {
-    assert(mData.get() != nullptr);
-    if (auto pErrorStatistics = mData->errorStatistics.get())
-    {
-        return SIXSensorModel::getSIXUnmodeledError_(*pErrorStatistics);
-    }
-    return {};
+    return SIXSensorModel::getSIXUnmodeledError_(mData->errorStatistics.get());
 }
 
 void SIDDSensorModel::reinitialize()
