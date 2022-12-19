@@ -47,7 +47,7 @@
 #pragma warning(disable: 26487) // Don't return a pointer '...' that may be invalid (lifetime.4).
 #pragma warning(disable: 26451) // Arithmetic overflow : Using operator '...' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '...' to avoid overflow (io.2).
 #pragma warning(disable: 26455) //	 Default constructor may not throw.Declare it 'noexcept' (f.6).
-#pragma warning(disable: 26409) // Avoid calling new and delete explicitly, use std::make_unique<T> instead (r.11).
+#pragma warning(disable: 26409) // Avoid calling new and delete explicitly, use coda_oss::make_unique<T> instead (r.11).
 #pragma warning(disable: 26429) // Symbol '...' is never tested for nullness, it can be marked as not_null(f.23).
 #pragma warning(disable: 26400) // Do not assign the result of an allocation or a function call with an owner<T> return value to a raw pointer, use owner<T> instead(i.11).
 #pragma warning(disable: 26467) // Converting from floating point to unsigned integral types results in non-portable code if the double/float has a negative value. Use gsl::narrow_cast or gsl::narrow instead to guard against undefined behavior and potential data loss (es.46).

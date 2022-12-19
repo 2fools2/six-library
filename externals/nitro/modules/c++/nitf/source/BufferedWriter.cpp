@@ -31,7 +31,7 @@ namespace nitf
 {
 BufferedWriter::BufferedWriter(const std::string& file, size_t bufferSize) :
     mBufferSize(bufferSize),
-    mScopedBuffer(std::make_unique<char[]>(bufferSize)),
+    mScopedBuffer(coda_oss::make_unique<char[]>(bufferSize)),
     mBuffer(mScopedBuffer.get()),
     mPosition(0),
     mTotalWritten(0),

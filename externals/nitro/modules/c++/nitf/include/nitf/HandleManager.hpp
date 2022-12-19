@@ -49,7 +49,7 @@ class HandleManager
         std::lock_guard<std::mutex> obtainLock(mMutex);
         if (mHandleMap.find(object) == mHandleMap.end())
         {
-            mHandleMap[object] = std::make_unique<retval_t>(object).release();
+            mHandleMap[object] = coda_oss::make_unique<retval_t>(object).release();
         }
         return static_cast<retval_t*>(mHandleMap[object]);
     }

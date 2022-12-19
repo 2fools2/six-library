@@ -1,4 +1,6 @@
 set(TARGET_LANGUAGE c++)
+set(CMAKE_CXX_STANDARD 11)
+set(CXX_STANDARD_REQUIRED true)
 
 # turn on warnings as errors
 if (MSVC)
@@ -75,5 +77,6 @@ add_subdirectory("polygon")
 add_subdirectory("math.linear")
 add_subdirectory("math.poly")
 add_subdirectory("numpyutils")
+add_subdirectory("hdf5.lite")
 add_subdirectory("gsl")
 add_subdirectory("std")

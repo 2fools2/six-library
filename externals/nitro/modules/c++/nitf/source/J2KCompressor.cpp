@@ -426,7 +426,7 @@ public:
         auto tileStream = mTileStreams[localTileIndex];
         if (!mWriter)
         {
-            mWriter = std::make_unique<TileWriter>(*tileStream, mCompressionParams);
+            mWriter = coda_oss::make_unique<TileWriter>(*tileStream, mCompressionParams);
 
             // Write out the header
             // OpenJPEG makes us write the header, but we only want to keep it if we're tile 0

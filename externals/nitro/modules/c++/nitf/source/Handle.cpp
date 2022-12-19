@@ -61,7 +61,7 @@ public:
     }
 };
 
-nitf::Handle::Handle() noexcept(false) : mPimpl(std::make_unique<Impl>())
+nitf::Handle::Handle() noexcept(false) : mPimpl(coda_oss::make_unique<Impl>())
 {
 }
 nitf::Handle::~Handle() /*noexcept(false)*/ { }

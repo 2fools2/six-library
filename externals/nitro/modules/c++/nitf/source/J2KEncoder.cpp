@@ -66,7 +66,7 @@ struct j2k::Encoder::Impl final
 j2k::Encoder::~Encoder() = default;
 
 j2k::Encoder::Encoder(Image& image, const CompressionParameters& compressionParams)
-    : pImpl_(std::make_unique<Impl>())
+    : pImpl_(coda_oss::make_unique<Impl>())
 {
     j2k_initEncoderParameters(pImpl_->mEncoderParameters.get(),
         compressionParams.getTileDims().row, compressionParams.getTileDims().col,
