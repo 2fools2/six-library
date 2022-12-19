@@ -102,15 +102,15 @@ DerivedXMLControl::getParser(const std::string& strVersion) const
     //   SIDD 3.0.0
     if (normalizedVersion == "100")
     {
-        return coda_oss::make_unique<DerivedXMLParser100>(mLog);
+        return std::make_unique<DerivedXMLParser100>(mLog);
     }
     if (normalizedVersion == "200")
     {
-        return coda_oss::make_unique<DerivedXMLParser200>(mLog);
+        return std::make_unique<DerivedXMLParser200>(mLog);
     }
     if (normalizedVersion == "300")
     {
-        return coda_oss::make_unique<DerivedXMLParser300>(getLogger());
+        return std::make_unique<DerivedXMLParser300>(getLogger());
     }
 
     if (normalizedVersion == "110")

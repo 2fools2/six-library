@@ -161,7 +161,7 @@ static std::unique_ptr<input_amplitudes_t> AMP8I_PHS8I_to_RE32F_IM32F_(const six
     // Get all 256x256 values for the AmplitudeTable
     auto nodes = make_nodes(pAmplitudeTable);
 
-    auto retval = coda_oss::make_unique<input_amplitudes_t>();
+    auto retval = std::make_unique<input_amplitudes_t>();
     auto& values = *retval;
     for (auto&& n : nodes)
     {

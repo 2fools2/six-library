@@ -84,7 +84,7 @@ size_t CPHDXMLControl::getXMLsize(const Metadata& metadata)
 
 std::unique_ptr<xml::lite::Document> CPHDXMLControl::toXML(const Metadata& metadata)
 {
-    auto doc = coda_oss::make_unique<xml::lite::Document>();
+    auto doc = std::make_unique<xml::lite::Document>();
 
     XMLElem root = newElement("CPHD");
     doc->setRootElement(root);
@@ -507,7 +507,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::u8string& xmlString
 
 std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc)
 {
-    auto cphd03 = coda_oss::make_unique<Metadata>();
+    auto cphd03 = std::make_unique<Metadata>();
 
     const auto root = doc->getRootElement();
 

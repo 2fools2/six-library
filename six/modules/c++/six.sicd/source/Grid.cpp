@@ -137,7 +137,7 @@ DirectionParameters::calculateWeightFunction() const
 
     if (windowName == "UNIFORM")
     {
-        return coda_oss::make_unique<Identity>();
+        return std::make_unique<Identity>();
     }
     if (windowName == "HAMMING")
     {
@@ -154,15 +154,15 @@ DirectionParameters::calculateWeightFunction() const
             coef = weightType->parameters[0];
         }
 
-        return coda_oss::make_unique<RaisedCos>(coef);
+        return std::make_unique<RaisedCos>(coef);
     }
     if (windowName == "HANNING")
     {
-        return coda_oss::make_unique<RaisedCos>(0.50);
+        return std::make_unique<RaisedCos>(0.50);
     }
     if (windowName == "KAISER")
     {
-        return coda_oss::make_unique<Kaiser>(double(weightType->parameters[0]));
+        return std::make_unique<Kaiser>(double(weightType->parameters[0]));
     }
 
     return nullptr;

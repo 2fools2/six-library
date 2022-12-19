@@ -200,7 +200,7 @@ void byteSwapAndPromote(const void* input,
                                      startRow,
                                      numRowsThisThread))
         {
-            auto scaler = coda_oss::make_unique<ByteSwapAndPromoteRunnable<InT>>(
+            auto scaler = std::make_unique<ByteSwapAndPromoteRunnable<InT>>(
                     input,
                     startRow,
                     numRowsThisThread,
@@ -237,7 +237,7 @@ void byteSwapAndScale(const void* input,
                                      startRow,
                                      numRowsThisThread))
         {
-            auto scaler = coda_oss::make_unique<ByteSwapAndScaleRunnable<InT>>(
+            auto scaler = std::make_unique<ByteSwapAndScaleRunnable<InT>>(
                     input,
                     startRow,
                     numRowsThisThread,
@@ -277,7 +277,7 @@ void byteSwap(void* buffer,
                                      startElement,
                                      numElementsThisThread))
         {
-            auto thread = coda_oss::make_unique<ByteSwapRunnable>(
+            auto thread = std::make_unique<ByteSwapRunnable>(
                     buffer,
                     elemSize,
                     startElement,

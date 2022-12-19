@@ -138,7 +138,7 @@ void promote(const void* input,
         size_t numRowsThisThread(0);
         while (planner.getThreadInfo(threadNum++, startRow, numRowsThisThread))
         {
-           auto scaler = coda_oss::make_unique<PromoteRunnable<InT>>(
+           auto scaler = std::make_unique<PromoteRunnable<InT>>(
                     static_cast<const std::complex<InT>*>(input),
                     startRow,
                     numRowsThisThread,
@@ -200,7 +200,7 @@ void scale(const void* input,
         size_t numRowsThisThread(0);
         while (planner.getThreadInfo(threadNum++, startRow, numRowsThisThread))
         {
-           auto scaler = coda_oss::make_unique<ScaleRunnable<InT>>(
+           auto scaler = std::make_unique<ScaleRunnable<InT>>(
                     static_cast<const std::complex<InT>*>(input),
                     startRow,
                     numRowsThisThread,
@@ -563,7 +563,7 @@ void Wideband::read(size_t channel,
             channel, firstVector, lastVector, firstSample, lastSample, dims);
 
     const size_t bufSize = dims.row * dims.col * mElementSize;
-    data = coda_oss::make_unique<sys::ubyte[]>(bufSize);
+    data = std::make_unique<sys::ubyte[]>(bufSize);
 
     read(channel,
          firstVector,
@@ -577,7 +577,7 @@ void Wideband::read(size_t channel,
 void Wideband::read(size_t channel, std::unique_ptr<sys::ubyte[]>& data) const
 {
     const size_t bufSize = getBytesRequiredForRead(channel);
-    data = coda_oss::make_unique<sys::ubyte[]>(bufSize);
+    data = std::make_unique<sys::ubyte[]>(bufSize);
 
     read(channel, mem::BufferView<sys::ubyte>(data.get(), bufSize));
 }

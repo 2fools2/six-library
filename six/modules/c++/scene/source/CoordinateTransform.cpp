@@ -24,7 +24,7 @@
 scene::CoordinateTransform::CoordinateTransform(
         const scene::EllipsoidModel *initVals)
 {
-    model = coda_oss::make_unique<WGS84EllipsoidModel>().release();
+    model = std::make_unique<WGS84EllipsoidModel>().release();
 
     if(initVals != nullptr)
     {

@@ -218,7 +218,7 @@ struct NewMemoryWriteHandler::Impl final
 
 NewMemoryWriteHandler::NewMemoryWriteHandler(const NITFSegmentInfo& info,
     const std::byte* buffer_, size_t firstRow, const Data& data, bool doByteSwap)
-    : m_pImpl(coda_oss::make_unique<Impl>())
+    : m_pImpl(std::make_unique<Impl>())
 {
     const auto numCols = data.getNumCols();
     const auto numChannels = data.getNumChannels();

@@ -144,7 +144,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const std::u8string& xmlString
     six::MinidomParser parser;
     parser.parse(stringStream);
     auto result = fromXML(parser.getDocument(), schemaPaths);
-    return coda_oss::make_unique<Metadata>(std::move(result));
+    return std::make_unique<Metadata>(std::move(result));
 }
 
 std::unique_ptr<Metadata> CPHDXMLControl::fromXML(const xml::lite::Document* doc,
@@ -177,7 +177,7 @@ std::unique_ptr<Metadata> CPHDXMLControl::fromXMLImpl(const xml::lite::Document*
 std::unique_ptr<CPHDXMLParser>
 CPHDXMLControl::getParser(const xml::lite::Uri& uri) const
 {
-    return coda_oss::make_unique<CPHDXMLParser>(uri.value, false, mLog);
+    return std::make_unique<CPHDXMLParser>(uri.value, false, mLog);
 }
 
 std::string CPHDXMLControl::uriToVersion(const xml::lite::Uri& uri) const

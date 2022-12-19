@@ -460,7 +460,7 @@ void NITFReadControl::load_(std::shared_ptr<nitf::IOInterface> ioInterface, cons
         if (pData->getDataType() == DataType::DERIVED && pData->getVersion() == "2.0.0")
         {
             const auto nitfLut = subheader.getBandInfo(0).getLookupTable();
-            currentInfo->getData_()->setDisplayLUT(coda_oss::make_unique<AmplitudeTable>(nitfLut));
+            currentInfo->getData_()->setDisplayLUT(std::make_unique<AmplitudeTable>(nitfLut));
         }
         currentInfo->addSegment(si);
     }

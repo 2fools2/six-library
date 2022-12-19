@@ -74,7 +74,7 @@ void CPHDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
     mVBM.load(*inStream, mFileHeader, numThreads);
 
     // Setup for wideband reading
-    mWideband = coda_oss::make_unique<cphd::Wideband>(inStream, mMetadata,
+    mWideband = std::make_unique<cphd::Wideband>(inStream, mMetadata,
                                  mFileHeader.getCPHDoffset(), mFileHeader.getCPHDsize());
 }
 }

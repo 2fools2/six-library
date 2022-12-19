@@ -1051,7 +1051,7 @@ static void update_for_SICD_130(ComplexData& data)
 static std::unique_ptr<ComplexData> createFakeComplexData_(const std::string& strVersion, 
     PixelType pixelType, bool makeAmplitudeTable, const types::RowCol<size_t>* pDims)
 {
-    std::unique_ptr<ComplexData> data(coda_oss::make_unique<six::sicd::ComplexData>());
+    std::unique_ptr<ComplexData> data(std::make_unique<six::sicd::ComplexData>());
     if (strVersion == "1.3.0")
     {
         data->setVersion(strVersion);

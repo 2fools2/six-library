@@ -78,14 +78,14 @@ void CPHDReader::initialize(std::shared_ptr<io::SeekableInputStream> inStream,
         [](const std::string& s) { return s; });
     mMetadata = CPHDXMLControl(logger.get()).fromXML(xmlParser.getDocument(), schemaPaths);
 
-    mSupportBlock = coda_oss::make_unique<SupportBlock>(inStream, mMetadata.data, mFileHeader);
+    mSupportBlock = std::make_unique<SupportBlock>(inStream, mMetadata.data, mFileHeader);
 
     // Load the PVPBlock into memory
     mPVPBlock = PVPBlock(mMetadata);
     mPVPBlock.load(*inStream, mFileHeader, numThreads);
 
     // Setup for wideband reading
-    mWideband = coda_oss::make_unique<Wideband>(inStream, mMetadata,
+    mWideband = std::make_unique<Wideband>(inStream, mMetadata,
         mFileHeader.getSignalBlockByteOffset(), mFileHeader.getSignalBlockSize());
 }
 }

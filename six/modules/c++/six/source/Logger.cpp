@@ -46,7 +46,7 @@ void six::Logger::setLogger(logging::Logger* logger, bool ownLog)
     else
     {
         // No logger passed in: create a null logger
-        setLogger(coda_oss::make_unique<logging::NullLogger>());
+        setLogger(std::make_unique<logging::NullLogger>());
     }
 }
 

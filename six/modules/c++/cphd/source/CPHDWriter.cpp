@@ -104,11 +104,11 @@ void CPHDWriter::initializeDataWriter()
     auto endianness = std::endian::native; // "conditional expression is constant"
     if (endianness == std::endian::big)
     {
-        mDataWriter = coda_oss::make_unique<DataWriterBigEndian>(mStream, mNumThreads);
+        mDataWriter = std::make_unique<DataWriterBigEndian>(mStream, mNumThreads);
     }
     else
     {
-        mDataWriter = coda_oss::make_unique<DataWriterLittleEndian>(mStream,
+        mDataWriter = std::make_unique<DataWriterLittleEndian>(mStream,
             mNumThreads,
             mScratchSpaceSize);
     }
