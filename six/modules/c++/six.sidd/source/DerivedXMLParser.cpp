@@ -142,7 +142,7 @@ void DerivedXMLParser::getAttributeIfExists(
 {
     if (attributes.contains(attributeName))
     {
-        date.reset(std::make_unique<DateTime>(toType<DateTime>(
+        date.reset(coda_oss::make_unique<DateTime>(toType<DateTime>(
             attributes.getValue(attributeName))));
     }
     else

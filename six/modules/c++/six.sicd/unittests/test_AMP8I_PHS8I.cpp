@@ -306,7 +306,7 @@ TEST_CASE(read_8bit_ampphs_with_table)
     }
 
     six::sicd::ImageData imageData;
-    imageData.amplitudeTable.reset(std::make_unique< six::AmplitudeTable>(AmpTable));
+    imageData.amplitudeTable.reset(coda_oss::make_unique< six::AmplitudeTable>(AmpTable));
     const auto actual = to_AMP8I_PHS8I(imageData, widebandData);
     const auto expected(sys::debug ? 
         std::pair<uint64_t, uint64_t>(12647523, 16973148) : std::pair<uint64_t, uint64_t>(3044868397, 3394353166));

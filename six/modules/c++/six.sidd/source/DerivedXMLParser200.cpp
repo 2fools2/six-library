@@ -2096,7 +2096,7 @@ void DerivedXMLParser200::parseDigitalElevationDataFromXML(
 std::unique_ptr<LUT> DerivedXMLParser200::parseSingleLUT(const std::string& lutStr, size_t size)
 {
     const auto lutVals = str::split(lutStr, " ");
-    auto lut = std::make_unique<LUT>(size, sizeof(short));
+    auto lut = coda_oss::make_unique<LUT>(size, sizeof(short));
 
     for (size_t ii = 0; ii < lutVals.size(); ++ii)
     {

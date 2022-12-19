@@ -134,7 +134,7 @@ struct XMLControlRegistry
     template<typename TXMLControlCreator>
     void addCreator()
     {
-        auto scopedCreator = std::make_unique<XMLControlCreatorT<TXMLControlCreator>>();
+        auto scopedCreator = coda_oss::make_unique<XMLControlCreatorT<TXMLControlCreator>>();
         addCreator(TXMLControlCreator::dataType, std::move(scopedCreator));
     }
 

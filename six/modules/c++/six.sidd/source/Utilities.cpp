@@ -616,7 +616,7 @@ static void createPredefinedFilter(six::sidd::Filter& filter)
 }
 inline std::unique_ptr<six::sidd::Filter> createPredefinedFilter()
 {
-    auto filter = std::make_unique<six::sidd::Filter>();
+    auto filter = coda_oss::make_unique<six::sidd::Filter>();
     createPredefinedFilter(*filter);
     return filter;
 }
@@ -638,7 +638,7 @@ static void createCustomFilter(six::sidd::Filter& filter)
 }
 inline std::unique_ptr<six::sidd::Filter> createCustomFilter()
 {
-    auto filter = std::make_unique<six::sidd::Filter>();
+    auto filter = coda_oss::make_unique<six::sidd::Filter>();
     createCustomFilter(*filter);
     return filter;
 }
@@ -1120,7 +1120,7 @@ static void populateData(six::sidd::DerivedData& siddData, const std::string& st
     {
         // This will naturally get constructed in the course of 1.0.0
         // Separate field in 2.0.0
-        siddData.setDisplayLUT(std::make_unique<six::AmplitudeTable>(elementSize));
+        siddData.setDisplayLUT(coda_oss::make_unique<six::AmplitudeTable>(elementSize));
 
         for (size_t ii = 0; ii < siddData.getDisplayLUT()->table.size(); ++ii)
         {
@@ -1303,7 +1303,7 @@ static std::unique_ptr<DerivedData> createFakeDerivedData_(const std::string& st
     }
     else
     {
-        data = std::make_unique<DerivedData>();
+        data = coda_oss::make_unique<DerivedData>();
     }
 
     if (!strVersion.empty())

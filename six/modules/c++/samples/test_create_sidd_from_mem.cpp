@@ -2357,7 +2357,7 @@ void populateData(six::sidd::DerivedData& siddData,
     {
         // This will naturally get constructed in the course of 1.0.0
         // Separate field in 2.0.0
-        siddData.setDisplayLUT(std::make_unique<six::AmplitudeTable>(elementSize));
+        siddData.setDisplayLUT(coda_oss::make_unique<six::AmplitudeTable>(elementSize));
 
         for (size_t ii = 0; ii < siddData.getDisplayLUT()->table.size(); ++ii)
         {

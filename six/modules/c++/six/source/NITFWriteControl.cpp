@@ -585,7 +585,7 @@ void NITFWriteControl::addDataAndWrite(const std::vector<std::string>& schemaPat
 
     // These must stick around until mWriter.write() is called since the
     // SegmentMemorySource's will be pointing to them
-    const auto desStrs = std::make_unique<std::string[]>(numDES);
+    const auto desStrs = coda_oss::make_unique<std::string[]>(numDES);
 
     for (size_t ii = 0; ii < numDES; ++ii)
     {

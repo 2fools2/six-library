@@ -191,7 +191,7 @@ public:
     {
         assert(getBuffer() == nullptr);
 
-        auto retval = std::make_unique<UByte[]>(size);
+        auto retval = coda_oss::make_unique<UByte[]>(size);
         setBuffer(retval.get());
         return retval;
     }
@@ -199,7 +199,7 @@ public:
     {
         assert(getBuffer() == nullptr);
 
-        auto retval = std::make_unique<std::complex<float>[]>(size);
+        auto retval = coda_oss::make_unique<std::complex<float>[]>(size);
         setComplexBuffer(retval.get());
         return retval;
     }

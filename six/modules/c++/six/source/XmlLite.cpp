@@ -46,7 +46,7 @@ namespace six
     };
 
     MinidomParser::MinidomParser()
-        : pImpl(std::make_unique<Impl>())
+        : pImpl(coda_oss::make_unique<Impl>())
     {
     }
     MinidomParser::~MinidomParser() = default;

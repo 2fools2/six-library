@@ -44,11 +44,11 @@ static const char ISM_URI[] = "urn:us:gov:ic:ism:13";
 
 //DerivedXMLParser300::DerivedXMLParser300(std::unique_ptr<logging::Logger>&& log) :
 //    DerivedXMLParser(VERSION,
-//        std::make_unique<six::SICommonXMLParser10x>(versionToURI(VERSION), false, SI_COMMON_URI, *log),
+//        coda_oss::make_unique<six::SICommonXMLParser10x>(versionToURI(VERSION), false, SI_COMMON_URI, *log),
 //        std::move(log)) {  }
 DerivedXMLParser300::DerivedXMLParser300(logging::Logger& log) :
     DerivedXMLParser(VERSION,
-        std::make_unique<six::SICommonXMLParser10x>(versionToURI(VERSION), false, SI_COMMON_URI, log),
+        coda_oss::make_unique<six::SICommonXMLParser10x>(versionToURI(VERSION), false, SI_COMMON_URI, log),
         log) {  }
 
 DerivedData* DerivedXMLParser300::fromXML(

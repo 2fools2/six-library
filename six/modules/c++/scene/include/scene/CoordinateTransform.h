@@ -81,7 +81,7 @@ struct CoordinateTransform
 
 protected:
 
-    EllipsoidModel* model = std::make_unique<WGS84EllipsoidModel>().release();
+    EllipsoidModel* model = coda_oss::make_unique<WGS84EllipsoidModel>().release();
 };
 
 }

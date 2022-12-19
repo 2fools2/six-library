@@ -383,7 +383,7 @@ struct LUT
 
     virtual LUT* clone() const
     {
-        return std::make_unique<LUT>(getTable(), numEntries, elementSize).release();
+        return coda_oss::make_unique<LUT>(getTable(), numEntries, elementSize).release();
     }
 };
 
@@ -444,7 +444,7 @@ struct AmplitudeTable final : public LUT
 
     AmplitudeTable* clone() const
     {
-        auto ret = std::make_unique<AmplitudeTable>();
+        auto ret = coda_oss::make_unique<AmplitudeTable>();
         for (size_t ii = 0; ii < numEntries; ++ii)
         {
             void* ret_ii = (*ret)[ii];

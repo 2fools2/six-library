@@ -262,7 +262,7 @@ struct XmlLite final
         if (retval != nullptr)
         {
             //optional
-            obj.reset(std::make_unique<T>());
+            obj.reset(coda_oss::make_unique<T>());
         }
         return retval;
     }
