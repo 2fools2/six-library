@@ -20,13 +20,25 @@
  *
  */
 
-#ifndef __XML_LITE_ELEMENT_H__
-#define __XML_LITE_ELEMENT_H__
+#ifndef CODA_OSS_xml_lite_Element_h_INCLUDED_
+#define CODA_OSS_xml_lite_Element_h_INCLUDED_
+#pragma once
+
+#include <memory>
+#include <string>
+#include <new> // std::nothrow_t
+#include <coda_oss/string.h>
+#include <tuple>
 
 #include <io/InputStream.h>
 #include <io/OutputStream.h>
+#include <str/Convert.h>
+#include <str/EncodedString.h>
 #include "xml/lite/XMLException.h"
 #include "xml/lite/Attributes.h"
+#include "xml/lite/QName.h"
+#include "sys/Conf.h"
+#include "mem/SharedPtr.h"
 
 /*!
  * \file  Element.h
@@ -42,6 +54,8 @@ namespace xml
 {
 namespace lite
 {
+struct AttributeNode;
+
 /*!
  * \class Element
  * \brief The class defining one element of an XML document
@@ -49,14 +63,9 @@ namespace lite
  * This class stores all of the element information about an XML
  * document.
  */
-class Element
+struct Element // SOAPElement derives :-(
 {
-public:
-    //! Default constructor
-    Element() :
-        mParent(NULL)
-    {
-    }
+    Element() = default;
 
     /*!
      * Constructor taking the namespace prefix and the local name 
@@ -64,14 +73,24 @@ public:
      * \param uri The uri of the object
      * \param characterData The character data (if any)
      */
-    Element(const std::string& qname, const std::string& uri = "",
-            std::string characterData = "") :
-        mParent(NULL), mName(uri, qname), mCharacterData(characterData)
+    explicit Element(const std::string& qname, const std::string& uri = "", const std::string& characterData = "") :
+        mName(uri, qname)
     {
+        setCharacterData(characterData);
+    }
+    Element(const xml::lite::QName& qname, const coda_oss::u8string& characterData) : mName(qname)
+    {
+        setCharacterData(characterData);
     }
 
+    #ifndef SWIG // SWIG doesn't like std::unique_ptr
+    static std::unique_ptr<Element> create(const std::string& qname, const std::string& uri = "", const std::string& characterData = "");
+    static std::unique_ptr<Element> create(const xml::lite::QName&, const std::string& characterData = "");
+    static std::unique_ptr<Element> create(const xml::lite::QName&, const coda_oss::u8string&);
+    #endif // SWIG
+    
     //! Destructor
-    virtual ~Element()
+    virtual ~Element() noexcept(false)
     {
         destroyChildren();
     }
@@ -79,18 +98,21 @@ public:
     //! Destroys any child elements.
     void destroyChildren();
 
-    /*!
-     * Copy constructor
-     * \param element  Takes an element
-     */
-    Element(const Element& element);
+    // use clone() to duplicate an Element
+    #if !(defined(SWIG) || defined(SWIGPYTHON) || defined(HAVE_PYTHON_H))  // SWIG needs these
+    //private: // encoded as part of the C++ name mangling by some compilers
+    #endif
+    Element(const Element&);
+    Element& operator=(const Element&);
+    #if !(defined(SWIG) || defined(SWIGPYTHON) || defined(HAVE_PYTHON_H))
+    public:
+    #endif
 
-    /*!
-     *  Assignment operator
-     *  \param element  Takes an element
-     *  \return a reference to *this
-     */
-    Element& operator=(const Element& element);
+    Element(Element&&) = default;
+    Element& operator=(Element&&) = default;
+
+    Element& operator=(std::unique_ptr<Element>&&);  // setChild()
+
 
     /*!
      *  Clone function performs deep copy
@@ -110,7 +132,7 @@ public:
 
     std::string& attribute(const std::string& s)
     {
-        return mAttributes[s];
+        return getAttributes()[s];
     }
 
     /*!
@@ -143,13 +165,17 @@ public:
     void getElementsByTagNameNS(const std::string& qname,
                                 std::vector<Element*>& elements,
                                 bool recurse = false) const;
+    /*!
+     *  \param std::nothrow -- will still throw if MULTIPLE elements are found, returns NULL if none
+     */
+    Element* getElementByTagNameNS(std::nothrow_t, const std::string& qname, bool recurse = false) const;
+    Element& getElementByTagNameNS(const std::string& qname, bool recurse = false) const;
 
     /*!
      *  Utility for people that dont like to pass by reference
      *
      */
-    std::vector<Element*> getElementsByTagNameNS(const std::string& qname,
-                                                 bool recurse = false) const
+    std::vector<Element*> getElementsByTagNameNS(const std::string& qname, bool recurse = false) const
     {
         std::vector<Element*> v;
         getElementsByTagNameNS(qname, v, recurse);
@@ -178,24 +204,76 @@ public:
     }
 
     /*!
+     *  \param std::nothrow -- will still throw if MULTIPLE elements are found, returns NULL if none
+     */
+    Element* getElementByTagName(std::nothrow_t, const std::string& localName, bool recurse = false) const;
+    Element& getElementByTagName(const std::string& localName, bool recurse = false) const;
+
+    /*!
      *  Get the elements by tag name
      *  \param uri the URI
      *  \param localName the local name
      *  \param elements the elements that match the QName
      */
-    void getElementsByTagName(const std::string& uri,
-                              const std::string& localName,
-                              std::vector<Element*>& elements,
-                              bool recurse = false) const;
+    void getElementsByTagName(const xml::lite::QName& name, std::vector<Element*>& elements, bool recurse = false) const;
+    void getElementsByTagName(const std::string& uri, const std::string& localName, std::vector<Element*>& elements, bool recurse = false) const
+    {
+        getElementsByTagName(QName(uri, localName), elements, recurse);
+    }
+    
+    /*!
+     *  \param std::nothrow -- will still throw if MULTIPLE elements are found,
+     * returns NULL if none
+     */
+    Element* getElementByTagName(std::nothrow_t, const xml::lite::QName&, bool recurse = false) const;
+    Element* operator()(std::nothrow_t, const xml::lite::QName& name, bool recurse = false) const
+    {
+        return getElementByTagName(std::nothrow, name, recurse);
+    }
+    Element* getElementByTagName(std::nothrow_t t, const std::string& uri, const std::string& localName, bool recurse = false) const 
+    {
+        return getElementByTagName(t, QName(uri, localName), recurse);
+    }
+    Element& getElementByTagName(const xml::lite::QName&, bool recurse = false) const;
+    Element& operator()(const xml::lite::QName& name, bool recurse = false) const
+    {
+        return getElementByTagName(name, recurse);
+    }
+    Element& getElementByTagName(const std::string& uri, const std::string& localName, bool recurse = false) const 
+    {
+        return getElementByTagName(QName(uri, localName), recurse);
+    }
+
+    /*!
+     *  Utility for people that dont like to pass by reference
+     */
+    std::vector<Element*> getElementsByTagName(const xml::lite::QName& name, bool recurse = false) const
+    {
+        std::vector<Element*> v;
+        getElementsByTagName(name, v, recurse);
+        return v;
+    }
+    std::vector<Element*> getElementsByTagName(const std::string& uri, const std::string& localName, bool recurse = false) const
+    {
+        return getElementsByTagName(QName(uri, localName), recurse);
+    }
 
     /*!
      *  1)  Find this child's attribute and change it
      *  2)  Recursively descend over children and fix all
      *  namespaces below using fixNodeNamespace()
      */
-    void setNamespacePrefix(std::string prefix, std::string uri);
+    void setNamespacePrefix(std::string prefix, const xml::lite::Uri&);
+    void setNamespacePrefix(std::string prefix, std::string uri)
+    {
+        setNamespacePrefix(prefix, Uri(uri));
+    }
 
-    void setNamespaceURI(std::string prefix, std::string uri);
+    void setNamespaceURI(std::string prefix, const xml::lite::Uri&);
+    void setNamespaceURI(std::string prefix, std::string uri)
+    {
+        setNamespaceURI(prefix, Uri(uri));
+    }
 
     /*!
      *  Prints the element to the specified OutputStream
@@ -204,8 +282,16 @@ public:
      *  \todo Add format capability
      */
     void print(io::OutputStream& stream) const;
-
     void prettyPrint(io::OutputStream& stream,
+                     const std::string& formatter = "    ") const;
+
+    // Outputs (presumablly to the console) using the **NATIVE** encoding.
+    // For most XML processing, **THIS IS WRONG** as output should
+    // always be UTF-8.  However, for displaying XML on the console in Windows,
+    // the native (Windows-1252) encoding will work better as "special" characters
+    // will be displayed.
+    void consoleOutput_(io::OutputStream& stream) const; // be sure OutputStream is the console, not a file
+    void prettyConsoleOutput_(io::OutputStream& stream, // be sure OutputStream is the console, not a file
                      const std::string& formatter = "    ") const;
 
     /*!
@@ -221,25 +307,38 @@ public:
      *  \param localName the local name to search for
      *  \return true if it exists, false if not
      */
-    bool hasElement(const std::string& uri,
-                    const std::string& localName) const;
+    bool hasElement(const xml::lite::QName&) const;
+    bool hasElement(const std::string& uri, const std::string& localName) const
+    {
+        return hasElement(QName(uri, localName));
+    }
 
     /*!
      *  Returns the character data of this element.
      *  \return the charater data
      */
-    std::string getCharacterData() const
-    {
-        return mCharacterData;
-    }
+    std::string getCharacterData() const;
+    coda_oss::u8string& getCharacterData(coda_oss::u8string& result) const;
+    //explicit operator coda_oss::u8string() const
+    //{
+    //    coda_oss::u8string result;
+    //    std::ignore = getCharacterData(result); // result will be copy-elided
+    //    return result;
+    //}
 
     /*!
      *  Sets the character data for this element.
      *  \param characters The data to add to this element
      */
-    void setCharacterData(const std::string& characters)
+    void setCharacterData(const std::string&);
+    Element& operator=(const std::string&);  // setCharacterData()
+    Element& operator=(const char*);  // setCharacterData()
+    void setCharacterData(coda_oss::u8string s)
     {
-        mCharacterData = characters;
+        // See Item #41 in "Effective Modern C++" by Scott Meyers.
+        // std::basic_string<T> is "cheap to move" and "always copied"
+        // into mCharacterData.
+        mCharacterData = std::move(s);
     }
 
     /*!
@@ -268,6 +367,15 @@ public:
     {
         mName.setQName(qname);
     }
+    void setQName(const xml::lite::QName& qname)
+    {
+        mName = qname;
+    }
+    Element& operator=(const QName& qname)
+    {
+        setQName(qname);
+        return *this;
+    }
 
     /*!
      *  Returns the QName of this element.
@@ -275,16 +383,26 @@ public:
      */
     std::string getQName() const
     {
-        return mName.toString();
+        QName result;
+        getQName(result);
+        return result.toString();
+    }
+    void getQName(xml::lite::QName& result) const
+    {
+        result = mName;
     }
 
     /*!
      *  Sets the URI for this element.
      *  \param uri the data to add to this element
      */
-    void setUri(const std::string& uri)
+    void setUri(const xml::lite::Uri& uri)
     {
         mName.setAssociatedUri(uri);
+    }
+    void setUri(const std::string& uri)
+    {
+        setUri(Uri(uri));
     }
 
     /*!
@@ -293,8 +411,20 @@ public:
      */
     std::string getUri() const
     {
-        return mName.getAssociatedUri();
+        Uri result;
+        getUri(result);
+        return result.value;
     }
+    void getUri(xml::lite::Uri& result) const
+    {
+        mName.getAssociatedUri(result);
+    }
+
+    void setPrefix(const std::string& prefix)
+    {
+        mName.setPrefix(prefix);
+    }
+
 
     /*!
      *  Adds a child element to this element
@@ -306,7 +436,9 @@ public:
      *  Adds a child element to this element
      *  \param node the child element to add
      */
-    virtual void addChild(std::auto_ptr<Element> node);
+    #ifndef SWIG // SWIG doesn't like std::unique_ptr
+    virtual Element& addChild(std::unique_ptr<Element>&& node);
+    #endif // SWIG
 
     /*!
      *  Returns all of the children of this element
@@ -326,6 +458,14 @@ public:
         return mChildren;
     }
 
+    /*!
+    * Removes all the children WITHOUT destroying them; see destroyChildren().
+    */
+    void clearChildren()
+    {
+        mChildren.clear();
+    }
+
     Element* getParent() const
     {
         return mParent;
@@ -337,7 +477,11 @@ public:
     }
 
 protected:
+    //! The children of this element
+    std::vector<Element*> mChildren;
+    xml::lite::QName mName;
 
+private:
     void changePrefix(Element* element,
                       const std::string& prefix,
                       const std::string& uri);
@@ -346,19 +490,138 @@ protected:
                    const std::string& prefix,
                    const std::string& uri);
 
-    void depthPrint(io::OutputStream& stream, int depth,
-                    const std::string& formatter) const;
-    
-    Element* mParent;
-    //! The children of this element
-    std::vector<Element*> mChildren;
-    xml::lite::QName mName;
+    void depthPrint(io::OutputStream& stream, int depth, const std::string& formatter, bool isConsoleOutput = false) const;
+
+    Element* mParent = nullptr;
     //! The attributes for this element
     xml::lite::Attributes mAttributes;
-    //! The character data
-    std::string mCharacterData;
+    coda_oss::u8string mCharacterData;
 };
+
+Element& add(const xml::lite::QName&, const std::string& value, Element& parent);
+
+#ifndef SWIG
+// The (old) version of SWIG we're using doesn't like certain C++11 features.
+
+/*!
+ *  Returns the character data of this element converted to the specified type.
+ *  \param value the charater data as T
+ *  \return whether or not there was a value of type T
+ */
+template <typename ToType>
+inline auto castValue(const Element& element, ToType toType)  // getValue() conflicts with below
+   -> decltype(toType(std::string()))
+{
+    const auto characterData = element.getCharacterData();
+    if (characterData.empty())
+    {
+        throw except::BadCastException(Ctxt("call getCharacterData() to get an empty string"));
+    }
+    return toType(characterData);
+}
+template <typename T>
+inline T getValue(const Element& element)
+{
+    return castValue(element, details::toType<T>);
+}
+
+template <typename T, typename ToType>
+inline bool castValue(const Element& element, T& value, ToType toType)
+{
+    try
+    {
+        value = castValue(element, toType);
+    }
+    catch (const except::BadCastException&)
+    {
+        return false;
+    }
+    return true;
+}
+template <typename T>
+inline bool getValue(const Element& element, T& value)
+{
+    return castValue(element, value, details::toType<T>);
+}
+
+/*!
+ *  Sets the character data for this element by calling str::toString() on the value.
+ *  \param value The data to add to this element
+ */
+template <typename T, typename ToString>
+inline void setValue(Element& element, const T& value, ToString toString)
+{
+    element.setCharacterData(toString(value));
+}
+template <typename T>
+inline void setValue(Element& element, const T& value)
+{
+    setValue(element, value, details::toString<T>);
+}
+
+template <typename T, typename ToString>
+inline Element& addNewElement(const xml::lite::QName& name, const T& value, Element& parent,
+    ToString toString)
+{
+    return xml::lite::add(name, toString(value), parent);
+}
+template<typename T>
+inline Element& addNewElement(const xml::lite::QName& name, const T& value, Element& parent)
+{
+    return addNewElement(name, value, parent, details::toString<T>);
+}
+
+template <typename T, typename ToString>
+inline Element& addNewElement(const xml::lite::QName& name, const coda_oss::optional<T>& v, Element& parent,
+    ToString toString)
+{
+    return addNewElement(name, v.value(), parent, toString);
+}
+template<typename T>
+inline Element& addNewElement(const xml::lite::QName& name, const coda_oss::optional<T>& v, Element& parent)
+{
+    return addNewElement(name, v.value(), parent);
+}
+template <typename T, typename ToString>
+inline Element* addNewOptionalElement(const xml::lite::QName& name, const coda_oss::optional<T>& v, Element& parent,
+        ToString toString)
+{
+    return v.has_value() ? &addNewElement(name, v, parent, toString) : nullptr;
+}
+template<typename T>
+inline Element* addNewOptionalElement(const xml::lite::QName& name, const coda_oss::optional<T>& v, Element& parent)
+{
+    return v.has_value() ? &addNewElement(name, v, parent) : nullptr;
+}
+
+#endif // SWIG
+
+
+Element& setChild(Element&, std::unique_ptr<Element>&&);  // destroyChildren() + addChild()
+
+void operator+=(Element&, std::unique_ptr<Element>&&);  // addChild()
+
+Element& addChild(Element&, const std::string& qname);
+void operator+=(Element&, const std::string& qname);  // addChild()
+Element& addChild(Element&, const xml::lite::QName&); // there is also a QName in the xerces namespace
+void operator+=(Element&, const xml::lite::QName&);  // addChild()
+Element& addChild(Element&, const std::string& qname, const coda_oss::u8string& characterData);
+Element& addChild(Element&, const std::string&, const std::string&) = delete; // NO, order matters!
+Element& addChild(Element&, const xml::lite::QName&, const coda_oss::u8string& characterData);
+Element& addChild(Element&, const xml::lite::QName&, const std::string& characterData);
+Element& addChild(Element&, const std::string& qname, const xml::lite::Uri&);
+Element& addChild(Element&, const std::string& qname, const xml::lite::Uri&, const coda_oss::u8string& characterData);
+
+coda_oss::u8string getCharacterData(const Element&);
+
+xml::lite::AttributeNode& addAttribute(Element&, const xml::lite::AttributeNode&);
+void operator+=(Element&, const xml::lite::AttributeNode&);  // addAttribute()
+xml::lite::AttributeNode& addAttribute(Element&, const std::string& qname);
+xml::lite::AttributeNode& addAttribute(Element&, const xml::lite::QName&);
+xml::lite::AttributeNode& addAttribute(Element&, const xml::lite::QName&, const std::string& value);
+xml::lite::AttributeNode& addAttribute(Element&, const std::string&, const std::string&) = delete; // NO, order matters!
+
 }
 }
 
-#endif
+#endif // CODA_OSS_xml_lite_Element_h_INCLUDED_
