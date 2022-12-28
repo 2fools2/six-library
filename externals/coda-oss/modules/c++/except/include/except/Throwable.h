@@ -50,7 +50,7 @@
 #define CODA_OSS_except_Throwable_ISA_std_exception 0
 #endif
 #ifndef CODA_OSS_except_Throwable_ISA_std_exception // or, -DCODA_OSS_except_Throwable_ISA_std_exception=0
-#define CODA_OSS_except_Throwable_ISA_std_exception 0
+#define CODA_OSS_except_Throwable_ISA_std_exception 1
 #endif
 
 /*!
