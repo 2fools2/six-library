@@ -919,10 +919,7 @@ def configureCompilerOptions(self):
             config['cxx']['optz_fastest-possible']   =  [ config['cxx']['optz_fastest'], '-march=native' ]
 
             self.env.append_value('CXXFLAGS', '-fPIC'.split())
-            if not Options.options.enablecpp17:
-                gxxCompileFlags='-std=c++14'
-            else:
-                gxxCompileFlags='-std=c++17'
+            gxxCompileFlags='-std=c++17'
             self.env.append_value('CXXFLAGS', gxxCompileFlags.split())
 
             # DEFINES and LINKFLAGS will apply to both gcc and g++

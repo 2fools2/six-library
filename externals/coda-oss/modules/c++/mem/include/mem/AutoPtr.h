@@ -27,7 +27,8 @@
 
 #include <std/memory>
 
-#include "coda_oss/CPlusPlus.h"
+#include "coda_oss/memory.h"
+#include "mem/SharedPtr.h"
 
 namespace mem
 {
@@ -96,7 +97,6 @@ public:
     {
         *this = assign(p);
     }
-    #endif // CODA_OSS_cpp17
 
 
     T* get() const noexcept
