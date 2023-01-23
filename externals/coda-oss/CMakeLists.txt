@@ -28,7 +28,7 @@ if (${CMAKE_PROJECT_NAME} STREQUAL coda-oss)
         string(REGEX REPLACE "/W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 	    add_compile_options(/std:c++17)
     elseif (UNIX)
-	    add_compile_options(-std=c++17)
+	    add_compile_options(-std=c++14)
     endif()
 
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
